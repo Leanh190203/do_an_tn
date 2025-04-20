@@ -1,0 +1,163 @@
+.dashboard-container {
+    padding: 30px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    min-height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.dashboard-title {
+    text-align: center;
+    color: #2c3e50;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-left: 5px solid #1976d2;
+    padding-left: 15px;
+}
+
+.dashboard-subtitle {
+    text-align: center;
+    color: #7F8C8D;
+    margin-bottom: 30px;
+    font-size: 1rem;
+    font-style: italic;
+    opacity: 0.9;
+}
+
+.dashboard-card {
+    background-color: #FFFFFF;
+    border-left: 4px solid #1ABC9C;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    padding: 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    background-color: #F8FEFD;
+}
+
+.dashboard-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: rgba(26, 188, 156, 0.1);
+    transform: rotate(30deg);
+    transition: all 0.5s ease;
+    opacity: 0;
+}
+
+.dashboard-card:hover::before {
+    opacity: 1;
+    top: -20%;
+    left: -20%;
+}
+
+.dashboard-icon {
+    font-size: 2.5rem;
+    color: #1ABC9C;
+    margin-bottom: 10px;
+    transition: transform 0.3s ease;
+}
+
+.dashboard-card:hover .dashboard-icon {
+    transform: scale(1.05);
+}
+
+.dashboard-stat-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    border-radius: 12px !important;
+    overflow: hidden;
+}
+
+.dashboard-stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+.dashboard-stat-card .MuiCardContent-root {
+    padding: 24px;
+}
+
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.status-badge.confirmed {
+    background-color: #e3fcef;
+    color: #00a854;
+}
+
+.status-badge.pending {
+    background-color: #fff7e6;
+    color: #fa8c16;
+}
+
+.status-badge.cancelled {
+    background-color: #fff1f0;
+    color: #f5222d;
+}
+
+.status-badge.completed {
+    background-color: #e6f7ff;
+    color: #1890ff;
+}
+
+/* Animation for loading stats */
+.MuiCircularProgress-root {
+    color: #1976d2;
+}
+
+/* Table styles */
+.MuiTableContainer-root {
+    box-shadow: none !important;
+    border-radius: 12px;
+}
+
+.MuiTableHead-root .MuiTableCell-root {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #2c3e50;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+}
+
+.MuiTableBody-root .MuiTableRow-root:hover {
+    background-color: #f8f9fa;
+}
+
+/* Responsive grid adjustments */
+@media (max-width: 960px) {
+    .dashboard-container {
+        padding: 20px;
+    }
+
+    .dashboard-title {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .dashboard-container {
+        padding: 15px;
+    }
+
+    .dashboard-title {
+        font-size: 1.5rem;
+    }
+}

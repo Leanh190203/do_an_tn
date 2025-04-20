@@ -1,0 +1,274 @@
+.customer-container {
+    padding: 24px;
+    background-color: #e3f2fd; /* Màu xanh dương nhạt */
+    min-height: 100vh;
+}
+
+.customer-paper {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    padding: 30px;
+    border: 3px solid #2196f3; /* Viền xanh dương */
+}
+
+.customer-title {
+    color: #1a237e;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.search-field {
+    margin-bottom: 16px;
+}
+
+.customer-table {
+    border-radius: 8px;
+    box-shadow: 3px 5px 12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+
+.customer-table th {
+    background-color: #2196f3; /* Đổi màu header bảng thành xanh dương */
+    color: #fff;
+    text-align: center;
+}
+
+.customer-table td {
+    text-align: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.customer-table tr:hover {
+    background-color: #e3f2fd; /* Màu xanh dương nhạt khi hover */
+}
+
+.customer-list-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.customer-form {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.customer-form button {
+  background-color: #1976d2;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 1rem;
+}
+
+.customer-form button:hover {
+  background-color: #1565c0;
+}
+
+.customer-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.customer-item {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.customer-info h3 {
+  color: #1976d2;
+  margin-bottom: 0.5rem;
+}
+
+.customer-info p {
+  color: #666;
+  margin: 0.25rem 0;
+}
+
+.customer-actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.customer-actions button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.customer-actions button:nth-child(1) {
+  background-color: #2196f3;
+  color: white;
+}
+
+.customer-actions button:nth-child(2) {
+  background-color: #f44336;
+  color: white;
+}
+
+.customer-actions button:nth-child(3) {
+  background-color: #4caf50;
+  color: white;
+}
+
+.customer-pets-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-content h3 {
+  color: #1976d2;
+  margin-bottom: 1rem;
+}
+
+.pets-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.error-message {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.success-message {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.dialog-title {
+  background-color: #1a237e;
+  color: white;
+}
+
+.dialog-form {
+  padding: 24px;
+}
+
+.pets-table-container {
+  margin-top: 16px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.MuiTableHead-root .MuiTableCell-root {
+  font-weight: 600;
+  background-color: #f5f5f5;
+}
+
+.MuiTableRow-root:hover {
+  background-color: #f8f9fa;
+}
+
+.customer-chip {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.customer-chip:hover {
+  background-color: #e3f2fd;
+}
+
+.dialog-content {
+  margin-top: 16px;
+}
+
+.form-field {
+  margin-bottom: 16px;
+}
+
+.pet-count-chip {
+  min-width: 100px;
+}
+
+.pet-table {
+  min-width: 650px;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.status-badge.active {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-badge.inactive {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.table-container {
+  margin-top: 16px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.customer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
