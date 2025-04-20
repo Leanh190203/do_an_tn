@@ -1,0 +1,218 @@
+.petlist-container {
+    padding: 30px;
+    background-color: #f0f8ff; /* Màu nền nhẹ nhàng */
+    min-height: 100vh;
+}
+
+.petlist-alert {
+    margin-bottom: 10px;
+}
+
+.petlist-paper {
+    background-color: #ffffff;
+    border-radius: 16px;
+    border: 2px solid #5e4caf;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 20px;
+}
+
+.petlist-title {
+    text-align: center;
+    color: #3550a8;
+    font-weight: bold;
+    margin-bottom: 50px;
+}
+
+.petlist-form {
+    background-color: #ECF0F1;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.petlist-table {
+    background-color: #ECF0F1;
+    border-radius: 8px;
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.petlist-btn {
+    background-color: #153093;
+    color: #fff;
+    border-radius: 20px;
+    padding: 8px 20px;
+    transition: background-color 0.3s ease;
+}
+
+.petlist-btn:hover {
+    background-color: #0b06a7;
+}
+
+.pet-list-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.MuiTableHead-root .MuiTableCell-root {
+  font-weight: 600;
+  background-color: #f5f5f5;
+}
+
+.MuiTableRow-root:hover {
+  background-color: #f8f9fa;
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.status-badge.active {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-badge.inactive {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.search-field {
+  margin-bottom: 16px;
+}
+
+.pet-form-dialog .MuiDialogContent-root {
+  padding-top: 16px;
+}
+
+.pet-form-field {
+  margin-bottom: 16px;
+}
+
+.action-buttons {
+  gap: 8px;
+  display: flex;
+}
+
+.table-container {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.header-container {
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.table-cell-center {
+  text-align: center;
+}
+
+.gender-male {
+  color: #1976d2;
+}
+
+.gender-female {
+  color: #d81b60;
+}
+
+.pet-form {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.pet-form button {
+  background-color: #1976d2;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 1rem;
+}
+
+.pet-form button:hover {
+  background-color: #1565c0;
+}
+
+.pet-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.pet-item {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.pet-item:hover {
+  transform: translateY(-2px);
+}
+
+.pet-info h3 {
+  color: #1976d2;
+  margin-bottom: 0.5rem;
+}
+
+.pet-info p {
+  color: #666;
+  margin: 0.25rem 0;
+}
+
+.pet-actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.pet-actions button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  flex: 1;
+}
+
+.pet-actions button:nth-child(1) {
+  background-color: #2196f3;
+  color: white;
+}
+
+.pet-actions button:nth-child(2) {
+  background-color: #f44336;
+  color: white;
+}
+
+.error-message {
+  color: #d32f2f;
+  padding: 1rem;
+  background-color: #ffebee;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
