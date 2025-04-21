@@ -7,8 +7,6 @@ export default function SignUpScreen() {
   const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [address, setAddress] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -24,12 +22,6 @@ export default function SignUpScreen() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       Alert.alert("Lỗi", "Email không đúng định dạng!");
-      return;
-    }
-
-    // Kiểm tra định dạng số điện thoại nếu đã nhập
-    if (phone && !/^[0-9]{10,11}$/.test(phone)) {
-      Alert.alert("Lỗi", "Số điện thoại không hợp lệ! Vui lòng nhập 10-11 chữ số.");
       return;
     }
 
@@ -49,12 +41,13 @@ export default function SignUpScreen() {
       setLoading(true);
       
       // Gửi dữ liệu đăng ký đến API backend
+      // Gửi giá trị rỗng cho phone và address
       const result = await authService.register({
         name,
         email,
         password,
-        phone,
-        address
+        phone: '',
+        address: ''
       });
       
       console.log('Đăng ký thành công:', result);
@@ -62,7 +55,7 @@ export default function SignUpScreen() {
       // Hiển thị thông báo thành công và chuyển hướng
       Alert.alert(
         "Thành công", 
-        "Đăng ký tài khoản và tạo hồ sơ khách hàng thành công! Bạn có thể đăng nhập ngay bây giờ.", 
+        "Đăng ký tài khoản thành công! Bạn có thể đăng nhập ngay bây giờ.", 
         [
           { 
             text: "Đăng nhập", 
@@ -117,23 +110,6 @@ export default function SignUpScreen() {
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
-            placeholderTextColor="#B0C4DE"
-          />
-
-          <TextInput
-            style={styles.input}
-            placeholder="Số điện thoại"
-            value={phone}
-            onChangeText={setPhone}
-            keyboardType="phone-pad"
-            placeholderTextColor="#B0C4DE"
-          />
-
-          <TextInput
-            style={styles.input}
-            placeholder="Địa chỉ"
-            value={address}
-            onChangeText={setAddress}
             placeholderTextColor="#B0C4DE"
           />
 
