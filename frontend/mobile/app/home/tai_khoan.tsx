@@ -37,20 +37,52 @@ export default function UserProfileScreen() {
     return (
       <View style={styles.containerNotLoggedIn}>
         <StatusBar backgroundColor="#1976D2" barStyle="light-content" />
+        
+        {/* Header với gradient */}
         <View style={styles.notLoggedInHeader}>
           <Image 
             source={require('@/assets/images/Logo_DAI_NAM.png')} 
             style={styles.logo} 
             resizeMode="contain"
           />
+          <Text style={styles.headerTitle}>Phòng Khám Thú Cưng</Text>
         </View>
         
-        <View style={styles.notLoggedInContainer}>
-          <MaterialCommunityIcons name="account-lock" size={100} color="#1976D2" />
-          <Text style={styles.notLoggedInText}>Chưa đăng nhập</Text>
-          <Text style={styles.notLoggedInSubText}>
-            Vui lòng đăng nhập để xem thông tin tài khoản và sử dụng đầy đủ các tính năng
-          </Text>
+        <ScrollView 
+          style={styles.notLoggedInScroll}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.notLoggedInCard}>
+            <View style={styles.illustrationContainer}>
+              <MaterialCommunityIcons name="account-lock-outline" size={80} color="#1976D2" />
+              <View style={styles.illustrationDot1} />
+              <View style={styles.illustrationDot2} />
+              <View style={styles.illustrationDot3} />
+            </View>
+            
+            <Text style={styles.notLoggedInText}>Vui lòng đăng nhập</Text>
+            <Text style={styles.notLoggedInSubText}>
+              Đăng nhập vào tài khoản để truy cập các thông tin cá nhân, bệnh án, 
+              lịch hẹn và nhiều tính năng khác.
+            </Text>
+            
+            <View style={styles.benefitsContainer}>
+              <View style={styles.benefitItem}>
+                <MaterialCommunityIcons name="calendar-check" size={24} color="#4CAF50" />
+                <Text style={styles.benefitText}>Đặt lịch khám dễ dàng</Text>
+              </View>
+              
+              <View style={styles.benefitItem}>
+                <MaterialCommunityIcons name="clipboard-text" size={24} color="#FF9800" />
+                <Text style={styles.benefitText}>Theo dõi bệnh án thú cưng</Text>
+              </View>
+              
+              <View style={styles.benefitItem}>
+                <MaterialCommunityIcons name="bell-ring" size={24} color="#F44336" />
+                <Text style={styles.benefitText}>Nhận thông báo lịch khám</Text>
+              </View>
+            </View>
+          </View>
           
           <View style={styles.authButtonsContainer}>
             <TouchableOpacity
@@ -61,12 +93,18 @@ export default function UserProfileScreen() {
               <Text style={styles.loginButtonText}>Đăng nhập</Text>
             </TouchableOpacity>
             
+            <View style={styles.orContainer}>
+              <View style={styles.orLine} />
+              <Text style={styles.orText}>HOẶC</Text>
+              <View style={styles.orLine} />
+            </View>
+            
             <TouchableOpacity
-              style={[styles.loginButton, styles.registerButton]}
+              style={styles.registerButton}
               onPress={() => router.push('/home/dang_ki')}
             >
               <MaterialCommunityIcons name="account-plus" size={24} color="#FFF" />
-              <Text style={styles.loginButtonText}>Đăng ký</Text>
+              <Text style={styles.registerButtonText}>Tạo tài khoản mới</Text>
             </TouchableOpacity>
           </View>
           
@@ -74,9 +112,15 @@ export default function UserProfileScreen() {
             style={styles.backButton}
             onPress={() => router.back()}
           >
-            <Text style={styles.backButtonText}>Quay lại</Text>
+            <MaterialCommunityIcons name="arrow-left" size={18} color="#455A64" />
+            <Text style={styles.backButtonText}>Quay lại trang chủ</Text>
           </TouchableOpacity>
-        </View>
+          
+          <View style={styles.footerSmall}>
+            <Text style={styles.footerText}>© 2023 - Phòng khám thú cưng Đại Nam</Text>
+            <Text style={styles.footerVersion}>Phiên bản 1.0.0</Text>
+          </View>
+        </ScrollView>
       </View>
     );
   }
@@ -206,71 +250,185 @@ const styles = StyleSheet.create({
   },
   notLoggedInHeader: {
     backgroundColor: '#1976D2',
-    height: 150,
+    height: 180,
     justifyContent: 'center',
     alignItems: 'center',
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4.65,
+    elevation: 8,
   },
   logo: {
-    width: 120,
-    height: 120,
+    width: 80,
+    height: 80,
+    marginBottom: 8,
   },
-  notLoggedInContainer: {
+  headerTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    textAlign: 'center',
+  },
+  notLoggedInScroll: {
     flex: 1,
+  },
+  notLoggedInCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 24,
+    margin: 16,
+    marginTop: -30,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 4,
+  },
+  illustrationContainer: {
+    alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
-    marginTop: -50,
+    marginBottom: 24,
+    width: 120,
+    height: 120,
+    position: 'relative',
+  },
+  illustrationDot1: {
+    position: 'absolute',
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: '#E3F2FD',
+    top: 10,
+    right: 10,
+  },
+  illustrationDot2: {
+    position: 'absolute',
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+    backgroundColor: '#BBDEFB',
+    bottom: 15,
+    left: 15,
+  },
+  illustrationDot3: {
+    position: 'absolute',
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#90CAF9',
+    bottom: 30,
+    right: 20,
   },
   notLoggedInText: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#0D47A1',
-    marginTop: 20,
+    marginBottom: 12,
     textAlign: 'center',
   },
   notLoggedInSubText: {
     fontSize: 16,
     color: '#546E7A',
     textAlign: 'center',
-    marginTop: 10,
-    marginBottom: 30,
-    paddingHorizontal: 20,
+    marginBottom: 24,
+    lineHeight: 22,
+  },
+  benefitsContainer: {
+    marginBottom: 16,
+  },
+  benefitItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+    backgroundColor: '#FAFAFA',
+    padding: 12,
+    borderRadius: 8,
+  },
+  benefitText: {
+    marginLeft: 12,
+    fontSize: 14,
+    color: '#424242',
+    fontWeight: '500',
   },
   authButtonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '90%',
-    marginBottom: 20,
+    padding: 16,
+    paddingTop: 0,
   },
   loginButton: {
     backgroundColor: '#1976D2',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+    paddingVertical: 15,
     borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
-    marginHorizontal: 5,
     elevation: 3,
-  },
-  registerButton: {
-    backgroundColor: '#64B5F6',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
   },
   loginButtonText: {
     color: '#FFF',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
-    marginLeft: 8,
+    marginLeft: 10,
+  },
+  orContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 16,
+  },
+  orLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#E0E0E0',
+  },
+  orText: {
+    paddingHorizontal: 10,
+    color: '#757575',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  registerButton: {
+    backgroundColor: '#64B5F6',
+    paddingVertical: 15,
+    borderRadius: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+  },
+  registerButtonText: {
+    color: '#FFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: 10,
   },
   backButton: {
-    marginTop: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
+    padding: 12,
   },
   backButtonText: {
     color: '#455A64',
     fontSize: 16,
+    marginLeft: 6,
+  },
+  footerSmall: {
+    alignItems: 'center',
+    padding: 16,
+    paddingTop: 8,
+    marginBottom: 16,
   },
   header: {
     position: 'relative',

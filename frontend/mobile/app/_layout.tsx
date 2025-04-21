@@ -79,6 +79,25 @@ export default function AppLayout() {
             headerTitleStyle: { fontWeight: 'bold' }
           }} 
         />
+        <Stack.Screen 
+          name="home/article_detail" 
+          options={{ 
+            title: 'Bài viết', 
+            headerStyle: { backgroundColor: '#1976D2' },
+            headerTintColor: '#fff',
+            headerTitleStyle: { fontWeight: 'bold' }
+          }} 
+        />
+        <Stack.Screen 
+          name="bai-viet/[id]" 
+          options={{ 
+            title: 'Bài viết', 
+            headerStyle: { backgroundColor: '#1976D2' },
+            headerTintColor: '#fff',
+            headerTitleStyle: { fontWeight: 'bold' },
+            headerShown: false
+          }} 
+        />
       </Stack>
     </AuthProvider>
   );

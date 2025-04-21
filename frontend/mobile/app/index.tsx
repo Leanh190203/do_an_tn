@@ -10,39 +10,67 @@ import {
   Animated,
   StatusBar,
   FlatList,
+  Alert,
+  ImageBackground,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useAuth } from './context/AuthContext';
+import { Ionicons } from '@expo/vector-icons';
 
 const { width } = Dimensions.get('window');
 
 // Danh sách các banner quảng cáo
 const banners = [
   require('@/assets/images/anh1.jpg'),
-  require('@/assets/images/anh2.jpg'),
+  require('@/assets/images/anh7.jpg'),
   require('@/assets/images/anh3.jpg'),
   require('@/assets/images/anh4.jpg'),
 ];
 
 // Danh sách dịch vụ nổi bật
 const services = [
-  { id: '1', name: 'Khám Tổng Quát', icon: 'stethoscope', color: '#4CAF50' },
-  { id: '2', name: 'Tiêm Phòng', icon: 'needle', color: '#F57C00' },
-  { id: '3', name: 'Chữa Bệnh', icon: 'medical-bag', color: '#E91E63' },
-  { id: '4', name: 'Tắm & Spa', icon: 'shower', color: '#039BE5' },
-  { id: '5', name: 'Cắt Tỉa Lông', icon: 'content-cut', color: '#9C27B0' },
-  { id: '6', name: 'Khám Răng', icon: 'tooth', color: '#00BCD4' },
-  { id: '7', name: 'Siêu Âm', icon: 'heart-pulse', color: '#FF5722' },
-  { id: '8', name: 'Xét Nghiệm', icon: 'flask', color: '#607D8B' },
+  { id: '1', name: 'Khám Tổng Quát', icon: 'stethoscope', color: '#4CAF50', image: require('@/assets/images/anh1.jpg') },
+  { id: '2', name: 'Tiêm Phòng', icon: 'needle', color: '#F57C00', image: require('@/assets/images/anh2.jpg') },
+  { id: '3', name: 'Chữa Bệnh', icon: 'medical-bag', color: '#E91E63', image: require('@/assets/images/anh3.jpg') },
+  { id: '4', name: 'Tắm & Spa', icon: 'shower', color: '#039BE5', image: require('@/assets/images/anh4.jpg') },
+  { id: '5', name: 'Cắt Tỉa Lông', icon: 'content-cut', color: '#9C27B0', image: require('@/assets/images/anh5.jpg') },
+  { id: '6', name: 'Khám Răng', icon: 'tooth', color: '#00BCD4', image: require('@/assets/images/anh6.jpg') },
+  { id: '7', name: 'Siêu Âm', icon: 'heart-pulse', color: '#FF5722', image: require('@/assets/images/anh4.jpg') },
+  { id: '8', name: 'Xét Nghiệm', icon: 'flask', color: '#607D8B', image: require('@/assets/images/anh1.jpg') },
 ];
 
 // Danh sách các thú cưng được hiển thị gần đây
 const recentPets = [
-  { id: '1', name: 'Cookie', type: 'Chó', breed: 'Golden Retriever', image: require('@/assets/images/anh3.jpg') },
-  { id: '2', name: 'Milo', type: 'Mèo', breed: 'Scottish Fold', image: require('@/assets/images/anh2.jpg') },
+  { id: '1', name: 'Cookie', type: 'Chó', breed: 'Golden Retriever', image: require('@/assets/images/anh6.jpg') },
+  { id: '2', name: 'Milo', type: 'Mèo', breed: 'Scottish Fold', image: require('@/assets/images/anh5.jpg') },
   { id: '3', name: 'Coco', type: 'Chó', breed: 'Corgi', image: require('@/assets/images/anh1.jpg') },
-  { id: '4', name: 'Luna', type: 'Mèo', breed: 'Maine Coon', image: require('@/assets/images/anh4.jpg') },
+  { id: '4', name: 'Luna', type: 'Mèo', breed: 'Maine Coon', image: require('@/assets/images/anh2.jpg') },
+];
+
+// Danh sách tin tức
+const dummyNews = [
+  {
+    id: '1',
+    title: '7 thói quen chăm sóc thú cưng hàng ngày',
+    description: 'Những thói quen đơn giản giúp thú cưng của bạn khỏe mạnh và hạnh phúc mỗi ngày.',
+    date: '20/05/2023',
+    image: require('@/assets/images/anh1.jpg'),
+  },
+  {
+    id: '2',
+    title: 'Cách nhận biết khi thú cưng bị ốm',
+    description: 'Dấu hiệu cảnh báo sớm giúp bạn phát hiện vấn đề sức khỏe ở thú cưng trước khi trở nên nghiêm trọng.',
+    date: '10/05/2023',
+    image: require('@/assets/images/anh2.jpg'),
+  },
+  {
+    id: '3',
+    title: 'Dinh dưỡng cho thú cưng theo độ tuổi',
+    description: 'Hướng dẫn chế độ ăn phù hợp cho thú cưng ở mỗi giai đoạn phát triển, từ con non đến già.',
+    date: '05/05/2023',
+    image: require('@/assets/images/anh3.jpg'),
+  },
 ];
 
 export default function HomeScreen() {
@@ -73,6 +101,32 @@ export default function HomeScreen() {
 
   const navigateTo = (route: string) => {
     router.push(route as never);
+  };
+
+  const checkLoginAndNavigate = (route: string, feature: string) => {
+    if (!isSignedIn) {
+      Alert.alert(
+        'Yêu cầu đăng nhập',
+        `Vui lòng đăng nhập để ${feature}.`,
+        [
+          {
+            text: 'Hủy',
+            style: 'cancel'
+          },
+          {
+            text: 'Đăng nhập',
+            onPress: () => router.push('/home/dang_nhap' as never)
+          }
+        ]
+      );
+    } else {
+      router.push(route as never);
+    }
+  };
+
+  // Hàm điều hướng đến trang chi tiết bài viết
+  const navigateToArticle = (id: string) => {
+    router.push(`/bai-viet/${id}` as never);
   };
 
   const renderDotIndicator = () => {
@@ -189,18 +243,18 @@ export default function HomeScreen() {
         <View style={styles.quickActionsContainer}>
           <TouchableOpacity 
             style={styles.quickAction}
-            onPress={() => navigateTo('/home/dat_lich')}
+            onPress={() => checkLoginAndNavigate('/home/them_benh_an', 'đặt lịch hẹn')}
           >
-            <View style={[styles.actionIcon, { backgroundColor: '#E3F2FD' }]}>
+            <View style={styles.actionIconCircle}>
               <MaterialCommunityIcons name="calendar-plus" size={24} color="#1976D2" />
             </View>
-            <Text style={styles.actionText}>Đặt lịch</Text>
+            <Text style={styles.actionText}>Lịch hẹn</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             style={styles.quickAction}
-            onPress={() => navigateTo('/home/benh_an')}
+            onPress={() => checkLoginAndNavigate('/home/benh_an', 'xem bệnh án')}
           >
-            <View style={[styles.actionIcon, { backgroundColor: '#FFF8E1' }]}>
+            <View style={styles.actionIconCircle}>
               <MaterialCommunityIcons name="clipboard-list" size={24} color="#FFA000" />
             </View>
             <Text style={styles.actionText}>Bệnh án</Text>
@@ -209,7 +263,7 @@ export default function HomeScreen() {
             style={styles.quickAction}
             onPress={() => navigateTo('/home/lien_he')}
           >
-            <View style={[styles.actionIcon, { backgroundColor: '#E8F5E9' }]}>
+            <View style={styles.actionIconCircle}>
               <MaterialCommunityIcons name="phone" size={24} color="#4CAF50" />
             </View>
             <Text style={styles.actionText}>Liên hệ</Text>
@@ -218,7 +272,7 @@ export default function HomeScreen() {
             style={styles.quickAction}
             onPress={() => navigateTo('/home/tai_khoan')}
           >
-            <View style={[styles.actionIcon, { backgroundColor: '#F3E5F5' }]}>
+            <View style={styles.actionIconCircle}>
               <MaterialCommunityIcons name="account" size={24} color="#9C27B0" />
             </View>
             <Text style={styles.actionText}>Tài khoản</Text>
@@ -229,22 +283,18 @@ export default function HomeScreen() {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Dịch vụ nổi bật</Text>
-            <TouchableOpacity>
-              <Text style={styles.seeAllText}>Xem tất cả</Text>
-            </TouchableOpacity>
           </View>
           <View style={styles.servicesGrid}>
             {services.map((service) => (
-              <TouchableOpacity 
+              <View 
                 key={service.id} 
                 style={styles.serviceItem}
-                onPress={() => navigateTo('/home/dich_vu')}
               >
-                <View style={[styles.serviceIcon, { backgroundColor: `${service.color}20` }]}>
-                  <MaterialCommunityIcons name={service.icon as any} size={24} color={service.color} />
+                <View style={[styles.serviceIconContainer, { backgroundColor: `${service.color}10` }]}>
+                  <MaterialCommunityIcons name={service.icon as any} size={26} color={service.color} />
                 </View>
                 <Text style={styles.serviceText}>{service.name}</Text>
-              </TouchableOpacity>
+              </View>
             ))}
           </View>
         </View>
@@ -253,9 +303,6 @@ export default function HomeScreen() {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Thú cưng gần đây</Text>
-            <TouchableOpacity onPress={() => navigateTo('/home/benh_an')}>
-              <Text style={styles.seeAllText}>Xem tất cả</Text>
-            </TouchableOpacity>
           </View>
           <ScrollView 
             horizontal 
@@ -266,14 +313,30 @@ export default function HomeScreen() {
               <TouchableOpacity 
                 key={pet.id} 
                 style={styles.petCard}
-                onPress={() => navigateTo('/home/benh_an')}
+                activeOpacity={0.7}
+                onPress={() => Alert.alert("Thông báo", `Xem thông tin của ${pet.name}`)}
               >
-                <Image source={pet.image} style={styles.petImage} />
-                <View style={styles.petInfo}>
-                  <Text style={styles.petName}>{pet.name}</Text>
-                  <Text style={styles.petBreed}>
-                    {pet.type} • {pet.breed}
-                  </Text>
+                <ImageBackground 
+                  source={pet.image} 
+                  style={styles.petImage}
+                  resizeMode="cover"
+                >
+                  <View style={styles.petImageOverlay} />
+                  <View style={styles.petTypeBadge}>
+                    <MaterialCommunityIcons 
+                      name={pet.type === "Chó" ? "dog" : "cat"} 
+                      size={14} 
+                      color="#FFFFFF" 
+                    />
+                    <Text style={styles.petTypeText}>{pet.type}</Text>
+                  </View>
+                </ImageBackground>
+                <View style={styles.petInfoContainer}>
+                  <View style={styles.petInfo}>
+                    <Text style={styles.petName}>{pet.name}</Text>
+                    <Text style={styles.petBreed}>{pet.breed}</Text>
+                  </View>
+                  <MaterialCommunityIcons name="information-outline" size={20} color="#1976D2" />
                 </View>
               </TouchableOpacity>
             ))}
@@ -283,35 +346,35 @@ export default function HomeScreen() {
         {/* News & Tips */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Tin tức & Mẹo chăm sóc</Text>
-            <TouchableOpacity>
+            <Text style={styles.sectionTitle}>Tin tức</Text>
+            <TouchableOpacity onPress={() => navigateTo('articles')}>
               <Text style={styles.seeAllText}>Xem tất cả</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.newsContainer}>
-            <TouchableOpacity style={styles.newsItem}>
-              <Image 
-                source={require('@/assets/images/anh1.jpg')} 
-                style={styles.newsImage} 
-                resizeMode="cover"
-              />
-              <View style={styles.newsContent}>
-                <Text style={styles.newsTitle}>7 thói quen chăm sóc thú cưng hàng ngày</Text>
-                <Text style={styles.newsDate}>20/05/2023</Text>
-              </View>
-            </TouchableOpacity>
-            
-            <TouchableOpacity style={styles.newsItem}>
-              <Image 
-                source={require('@/assets/images/anh2.jpg')} 
-                style={styles.newsImage} 
-                resizeMode="cover"
-              />
-              <View style={styles.newsContent}>
-                <Text style={styles.newsTitle}>Cách nhận biết khi thú cưng bị ốm</Text>
-                <Text style={styles.newsDate}>10/05/2023</Text>
-              </View>
-            </TouchableOpacity>
+            {dummyNews.map((item) => (
+              <TouchableOpacity 
+                key={item.id} 
+                style={styles.newsItem} 
+                activeOpacity={0.7} 
+                onPress={() => navigateToArticle(item.id)}
+              >
+                <Image source={item.image} style={styles.newsImage} />
+                <View style={styles.newsContent}>
+                  <View>
+                    <Text style={styles.newsTitle} numberOfLines={1}>{item.title}</Text>
+                    <Text style={styles.newsSubtitle} numberOfLines={2}>{item.description}</Text>
+                  </View>
+                  <View style={styles.newsFooter}>
+                    <Text style={styles.newsDate}>{item.date}</Text>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <Text style={styles.readMore}>Đọc thêm</Text>
+                      <Ionicons name="chevron-forward" size={12} color="#1976D2" />
+                    </View>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))}
           </View>
         </View>
 
@@ -346,15 +409,15 @@ export default function HomeScreen() {
         
         <TouchableOpacity 
           style={styles.footerTab}
-          onPress={() => navigateTo('/home/dat_lich')}
+          onPress={() => checkLoginAndNavigate('/home/them_benh_an', 'đặt lịch hẹn')}
         >
-          <MaterialCommunityIcons name="calendar" size={24} color="#9E9E9E" />
-          <Text style={styles.footerTabText}>Đặt lịch</Text>
+          <MaterialCommunityIcons name="calendar-plus" size={24} color="#9E9E9E" />
+          <Text style={styles.footerTabText}>Lịch hẹn</Text>
         </TouchableOpacity>
         
         <TouchableOpacity 
           style={styles.footerTab}
-          onPress={() => navigateTo('/home/benh_an')}
+          onPress={() => checkLoginAndNavigate('/home/benh_an', 'xem bệnh án')}
         >
           <MaterialCommunityIcons name="clipboard-text" size={24} color="#9E9E9E" />
           <Text style={styles.footerTabText}>Bệnh án</Text>
@@ -446,6 +509,11 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRadius: 12,
     alignSelf: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 4,
   },
   dotContainer: {
     flexDirection: 'row',
@@ -478,16 +546,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: (width - 80) / 4,
   },
-  actionIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+  actionIconCircle: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 8,
+    backgroundColor: '#F5F7FA',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   actionText: {
     fontSize: 12,
+    fontWeight: '500',
     color: '#424242',
     textAlign: 'center',
   },
@@ -514,19 +589,32 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 5,
+    elevation: 1,
   },
   serviceItem: {
-    width: (width - 64) / 4,
+    width: (width - 80) / 4,
     alignItems: 'center',
     marginBottom: 16,
   },
-  serviceIcon: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+  serviceIconContainer: {
+    width: 56,
+    height: 56,
+    borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 8,
+    overflow: 'hidden',
+  },
+  serviceImage: {
+    width: '100%',
+    height: '100%',
   },
   serviceText: {
     fontSize: 12,
@@ -535,13 +623,25 @@ const styles = StyleSheet.create({
   },
   recentPetsContainer: {
     paddingRight: 16,
+    paddingLeft: 4,
+    paddingTop: 8,
+    paddingBottom: 16,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 5,
+    elevation: 1,
   },
   petCard: {
-    width: 150,
+    width: 160,
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
     overflow: 'hidden',
-    marginRight: 12,
+    marginLeft: 12,
+    borderWidth: 1,
+    borderColor: '#F0F0F0',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -550,13 +650,41 @@ const styles = StyleSheet.create({
   },
   petImage: {
     width: '100%',
-    height: 100,
+    height: 130,
+    justifyContent: 'flex-end',
   },
-  petInfo: {
+  petImageOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+  },
+  petTypeBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    position: 'absolute',
+    top: 8,
+    right: 8,
+  },
+  petTypeText: {
+    color: '#FFFFFF',
+    fontSize: 10,
+    fontWeight: 'bold',
+    marginLeft: 3,
+  },
+  petInfoContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     padding: 10,
   },
+  petInfo: {
+    flex: 1,
+  },
   petName: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: 'bold',
     color: '#212121',
   },
@@ -567,6 +695,14 @@ const styles = StyleSheet.create({
   },
   newsContainer: {
     marginBottom: 16,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 5,
+    elevation: 1,
   },
   newsItem: {
     flexDirection: 'row',
@@ -574,30 +710,43 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     overflow: 'hidden',
     marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 1,
   },
   newsImage: {
-    width: 100,
-    height: 80,
+    width: 110,
+    height: 90,
+    borderRadius: 0,
   },
   newsContent: {
     flex: 1,
     padding: 12,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
   },
   newsTitle: {
     fontSize: 14,
     fontWeight: '600',
     color: '#212121',
-    marginBottom: 6,
+    marginBottom: 4,
+  },
+  newsSubtitle: {
+    fontSize: 12,
+    color: '#616161',
+    marginBottom: 4,
+    lineHeight: 16,
+  },
+  newsFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 4,
   },
   newsDate: {
     fontSize: 12,
     color: '#9E9E9E',
+  },
+  readMore: {
+    fontSize: 11,
+    color: '#1976D2',
+    fontWeight: '500',
   },
   aboutContainer: {
     margin: 16,

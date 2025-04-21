@@ -75,8 +75,8 @@ export default function ThemBenhAnScreen() {
 
   const handleSubmit = async () => {
     // Validation
-    if (!selectedPet || !selectedCustomer || !diagnosis || !service || !clinic) {
-      Alert.alert('Lỗi', 'Vui lòng điền đầy đủ thông tin bắt buộc');
+    if (!selectedPet || !selectedCustomer || !service) {
+      Alert.alert('Lỗi', 'Vui lòng điền đầy đủ thông tin bắt buộc: Chủ thú cưng, Thú cưng và Dịch vụ');
       return;
     }
 
@@ -94,7 +94,7 @@ export default function ThemBenhAnScreen() {
       };
       
       await medicalRecordService.createMedicalRecord(medicalRecordData);
-      Alert.alert('Thành công', 'Đã thêm bệnh án mới', [
+      Alert.alert('Thành công', 'Đã đặt lịch khám thành công. Chúng tôi sẽ liên hệ lại để xác nhận lịch hẹn của bạn.', [
         { 
           text: 'OK', 
           onPress: () => router.push('/home/benh_an') 
@@ -102,7 +102,7 @@ export default function ThemBenhAnScreen() {
       ]);
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      Alert.alert('Lỗi', 'Không thể lưu bệnh án: ' + errorMessage);
+      Alert.alert('Lỗi', 'Không thể đặt lịch khám: ' + errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -119,7 +119,7 @@ export default function ThemBenhAnScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>🩺 Thêm Bệnh Án Mới</Text>
+      <Text style={styles.title}>🩺 Đặt lịch hẹn</Text>
       
       <View style={styles.formGroup}>
         <Text style={styles.label}>Chủ thú cưng:</Text>
@@ -162,7 +162,7 @@ export default function ThemBenhAnScreen() {
       </View>
       
       <View style={styles.formGroup}>
-        <Text style={styles.label}>Ngày khám:</Text>
+        <Text style={styles.label}>Ngày đặt lịch:</Text>
         <TouchableOpacity 
           style={styles.dateButton}
           onPress={() => setShowDatePicker(true)}
@@ -179,27 +179,30 @@ export default function ThemBenhAnScreen() {
             mode="date"
             display="default"
             onChange={handleDateChange}
+            minimumDate={new Date()}
           />
         )}
       </View>
       
       <View style={styles.formGroup}>
-        <Text style={styles.label}>Chẩn đoán:</Text>
-        <TextInput
-          style={styles.input}
-          value={diagnosis}
-          onChangeText={setDiagnosis}
-          placeholder="Nhập chẩn đoán"
-        />
-      </View>
-      
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Dịch vụ:</Text>
+        <Text style={styles.label}>Dịch vụ cần sử dụng:</Text>
         <TextInput
           style={styles.input}
           value={service}
           onChangeText={setService}
-          placeholder="Nhập dịch vụ"
+          placeholder="Ví dụ: Khám tổng quát, Tiêm phòng, Tắm & Spa..."
+        />
+      </View>
+      
+      <View style={styles.formGroup}>
+        <Text style={styles.label}>Triệu chứng / Vấn đề:</Text>
+        <TextInput
+          style={[styles.input, styles.textArea]}
+          value={diagnosis}
+          onChangeText={setDiagnosis}
+          placeholder="Mô tả tình trạng của thú cưng"
+          multiline
+          numberOfLines={4}
         />
       </View>
       
@@ -209,17 +212,17 @@ export default function ThemBenhAnScreen() {
           style={styles.input}
           value={clinic}
           onChangeText={setClinic}
-          placeholder="Nhập phòng khám"
+          placeholder="Nhập phòng khám (nếu có yêu cầu)"
         />
       </View>
       
       <View style={styles.formGroup}>
-        <Text style={styles.label}>Ghi chú:</Text>
+        <Text style={styles.label}>Ghi chú thêm:</Text>
         <TextInput
           style={[styles.input, styles.textArea]}
           value={notes}
           onChangeText={setNotes}
-          placeholder="Nhập ghi chú và hướng dẫn điều trị"
+          placeholder="Thông tin thêm mà bạn muốn phòng khám biết"
           multiline
           numberOfLines={4}
         />
@@ -244,7 +247,7 @@ export default function ThemBenhAnScreen() {
           ) : (
             <>
               <Ionicons name="save" size={20} color="#fff" />
-              <Text style={styles.submitButtonText}>Lưu bệnh án</Text>
+              <Text style={styles.submitButtonText}>Đặt lịch</Text>
             </>
           )}
         </TouchableOpacity>

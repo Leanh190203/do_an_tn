@@ -88,14 +88,14 @@ export default function MedicalRecordsScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>📋 Danh Sách Bệnh Án</Text>
+      <Text style={styles.title}>📋 Lịch sử khám & Lịch hẹn</Text>
       
       <View style={styles.searchContainer}>
         <View style={styles.searchInputContainer}>
           <Ionicons name="search" size={20} color="#666" style={styles.searchIcon} />
           <TextInput
             style={styles.searchInput}
-            placeholder="Tìm kiếm theo tên, chủ hoặc chẩn đoán..."
+            placeholder="Tìm kiếm theo tên thú cưng hoặc dịch vụ..."
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
@@ -111,7 +111,7 @@ export default function MedicalRecordsScreen() {
         <View style={styles.emptyContainer}>
           <Ionicons name="medical" size={60} color="#BBDEFB" />
           <Text style={styles.emptyText}>
-            {searchQuery ? 'Không tìm thấy kết quả phù hợp' : 'Chưa có bệnh án nào'}
+            {searchQuery ? 'Không tìm thấy kết quả phù hợp' : 'Bạn chưa có lịch sử khám nào. Hãy đặt lịch khám ngay!'}
           </Text>
         </View>
       ) : (
@@ -129,7 +129,7 @@ export default function MedicalRecordsScreen() {
               </View>
               <Text style={styles.cardText}>👤 Chủ: {item.owner} {item.phone ? `(${item.phone})` : ''}</Text>
               <Text style={styles.cardText}>📅 Ngày khám: {formatDate(item.date)}</Text>
-              <Text style={styles.cardText}>🩺 Chẩn đoán: {item.diagnosis}</Text>
+              <Text style={styles.cardText}>🩺 Triệu chứng / Vấn đề: {item.diagnosis}</Text>
               <Text style={styles.cardText}>🛠️ Dịch vụ: {item.service}</Text>
               <Text style={styles.cardText}>🏥 Phòng khám: {item.clinic}</Text>
               {item.notes && <Text style={styles.cardText} numberOfLines={2}>📝 Ghi chú: {item.notes}</Text>}
@@ -150,7 +150,7 @@ export default function MedicalRecordsScreen() {
         onPress={() => router.push('/home/them_benh_an')}
       >
         <Ionicons name="add-circle" size={28} color="#fff" />
-        <Text style={styles.addButtonText}>Thêm Bệnh Án</Text>
+        <Text style={styles.addButtonText}>Đặt lịch khám</Text>
       </TouchableOpacity>
     </View>
   );
