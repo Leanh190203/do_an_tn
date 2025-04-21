@@ -1,16 +1,14 @@
 import axios from 'axios';
 
-// Khai báo global namespace để TypeScript biết về authToken
+
 declare global {
   var authToken: string | undefined;
   var currentUser: any | undefined;
 }
 
-// Cấu hình Axios instance
+
 const api = axios.create({
-  // Đối với máy ảo Android, sử dụng 10.0.2.2 để truy cập localhost của máy host
-  // Đối với thiết bị thật, cần sử dụng IP thực của máy chủ
-  // Vui lòng điều chỉnh dựa trên môi trường phát triển
+
   baseURL: ' http://192.168.100.169:5000/api', // đổi địa chỉ ip khi thay đổi mạng wifi
   headers: {
     'Content-Type': 'application/json',

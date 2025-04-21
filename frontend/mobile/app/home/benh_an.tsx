@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Alert, RefreshControl } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Alert, RefreshControl, TextInput } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import medicalRecordService from '../services/medicalRecordService';
@@ -15,18 +15,23 @@ interface MedicalRecordItem {
   service: string;
   clinic: string;
   notes: string;
+  pet_id: number;
 }
 
 export default function MedicalRecordsScreen() {
   const router = useRouter();
   const [medicalRecords, setMedicalRecords] = useState<MedicalRecordItem[]>([]);
+  const [filteredRecords, setFilteredRecords] = useState<MedicalRecordItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedSpecies, setSelectedSpecies] = useState('all');
 
   const loadMedicalRecords = async () => {
     try {
       const records = await medicalRecordService.getAllMedicalRecords();
       setMedicalRecords(records);
+      setFilteredRecords(records);
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       Alert.alert('Lỗi', 'Không thể tải danh sách bệnh án: ' + errorMessage);
@@ -40,8 +45,30 @@ export default function MedicalRecordsScreen() {
     loadMedicalRecords();
   }, []);
 
+  useEffect(() => {
+    filterRecords();
+  }, [searchQuery, selectedSpecies, medicalRecords]);
+
+  const filterRecords = () => {
+    let filtered = [...medicalRecords];
+    
+    // Filter by search query
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(record => 
+        record.petName?.toLowerCase().includes(query) ||
+        record.owner?.toLowerCase().includes(query) ||
+        record.diagnosis?.toLowerCase().includes(query)
+      );
+    }
+    
+    setFilteredRecords(filtered);
+  };
+
   const onRefresh = () => {
     setRefreshing(true);
+    setSearchQuery('');
+    setSelectedSpecies('all');
     loadMedicalRecords();
   };
 
@@ -63,14 +90,33 @@ export default function MedicalRecordsScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>📋 Danh Sách Bệnh Án</Text>
       
-      {medicalRecords.length === 0 ? (
+      <View style={styles.searchContainer}>
+        <View style={styles.searchInputContainer}>
+          <Ionicons name="search" size={20} color="#666" style={styles.searchIcon} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Tìm kiếm theo tên, chủ hoặc chẩn đoán..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={() => setSearchQuery('')}>
+              <Ionicons name="close-circle" size={20} color="#666" />
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+      
+      {filteredRecords.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Ionicons name="medical" size={60} color="#BBDEFB" />
-          <Text style={styles.emptyText}>Chưa có bệnh án nào</Text>
+          <Text style={styles.emptyText}>
+            {searchQuery ? 'Không tìm thấy kết quả phù hợp' : 'Chưa có bệnh án nào'}
+          </Text>
         </View>
       ) : (
         <FlatList
-          data={medicalRecords}
+          data={filteredRecords}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity 

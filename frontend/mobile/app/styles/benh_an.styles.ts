@@ -62,4 +62,28 @@ export const styles = StyleSheet.create({
     marginLeft: 12,
     textTransform: 'uppercase' as const,
   },
+  // Search styles
+  searchContainer: {
+    marginBottom: 16,
+    width: '100%',
+  },
+  searchInputContainer: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    backgroundColor: '#F5F5F5',
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+  },
+  searchIcon: {
+    marginRight: 8,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    color: '#333',
+    paddingVertical: 6,
+  },
 }); 
