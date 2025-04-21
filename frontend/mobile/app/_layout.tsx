@@ -61,6 +61,24 @@ export default function AppLayout() {
             headerTitleStyle: { fontWeight: 'bold' }
           }} 
         />
+        <Stack.Screen 
+          name="home/benh_an" 
+          options={{ 
+            title: 'Bệnh án', 
+            headerStyle: { backgroundColor: '#1976D2' },
+            headerTintColor: '#fff',
+            headerTitleStyle: { fontWeight: 'bold' }
+          }} 
+        />
+        <Stack.Screen 
+          name="home/them_benh_an" 
+          options={{ 
+            title: 'Thêm bệnh án mới', 
+            headerStyle: { backgroundColor: '#1976D2' },
+            headerTintColor: '#fff',
+            headerTitleStyle: { fontWeight: 'bold' }
+          }} 
+        />
       </Stack>
     </AuthProvider>
   );
