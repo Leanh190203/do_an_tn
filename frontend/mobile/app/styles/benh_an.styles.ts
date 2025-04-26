@@ -1,77 +1,101 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import { commonColors, commonStyles } from './common.styles';
 
+const { width } = Dimensions.get('window');
+
 export const styles = StyleSheet.create({
-  ...commonStyles,
+  // Root container
+  rootContainer: {
+    flex: 1,
+    backgroundColor: '#F5F7FA',
+  },
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: '#F5F7FA',
+  },
+  listContainer: {
+    paddingBottom: 80, // Space for floating button
+  },
   
-  // Specific styles for benh_an screen
-  emptyContainer: {
+  // Header styles
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 50,
+    paddingBottom: 15,
+    paddingHorizontal: 16,
+  },
+  headerTitle: {
+    color: '#FFFFFF',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  backButton: {
+    padding: 8,
+  },
+  
+  // Loading styles
+  loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#F5F7FA',
   },
-  emptyText: {
+  loadingText: {
     marginTop: 10,
-    fontSize: 18,
-    color: '#90A4AE',
-    textAlign: 'center' as const,
-  },
-  card: {
-    backgroundColor: '#ffffff',
-    padding: 18,
-    borderRadius: 15,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOpacity: 0.15,
-    shadowRadius: 6,
-    elevation: 4,
-  },
-  cardHeader: {
-    flexDirection: 'row' as const,
-    justifyContent: 'space-between',
-    alignItems: 'center' as const,
-    marginBottom: 8,
-  },
-  petName: {
-    fontSize: 20,
-    fontWeight: 'bold' as const,
-    color: commonColors.primary,
-  },
-  cardText: {
     fontSize: 16,
-    color: '#444',
-    marginBottom: 2,
+    color: '#1976D2',
   },
-  addButton: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    justifyContent: 'center',
-    backgroundColor: commonColors.primary,
-    paddingVertical: 16,
-    borderRadius: 12,
-    marginTop: 20,
+  
+  // Filter styles
+  filterContainer: {
+    flexDirection: 'row',
+    marginBottom: 16,
+    borderRadius: 8,
+    backgroundColor: '#FFFFFF',
+    padding: 4,
+    elevation: 1,
     shadowColor: '#000',
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 5,
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    shadowOffset: { width: 0, height: 1 },
   },
-  addButtonText: {
-    color: '#fff',
-    fontSize: 15,
-    fontWeight: 'bold' as const,
-    marginLeft: 12,
-    textTransform: 'uppercase' as const,
+  filterButton: {
+    flex: 1,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 6,
   },
+  filterButtonActive: {
+    backgroundColor: '#E3F2FD',
+  },
+  filterButtonText: {
+    fontSize: 14,
+    color: '#616161',
+  },
+  filterButtonTextActive: {
+    color: '#1976D2',
+    fontWeight: 'bold',
+  },
+  
   // Search styles
   searchContainer: {
-    marginBottom: 16,
-    width: '100%',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
+    overflow: 'hidden',
   },
   searchInputContainer: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: '#F5F5F5',
-    borderRadius: 10,
+    borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderWidth: 1,
@@ -82,8 +106,150 @@ export const styles = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
-    fontSize: 16,
+    fontSize: 15,
     color: '#333',
+    paddingVertical: 4,
+  },
+  
+  // Empty state
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  emptyTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#455A64',
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#90A4AE',
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 22,
+  },
+  emptyButton: {
+    backgroundColor: '#1976D2',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+  },
+  emptyButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  
+  // Card styles
+  card: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
+    overflow: 'hidden',
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+  },
+  petInfoContainer: {
+    flex: 1,
+  },
+  petName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#212121',
+    marginBottom: 4,
+  },
+  petOwner: {
+    fontSize: 14,
+    color: '#757575',
+  },
+  statusBadge: {
+    paddingHorizontal: 12,
     paddingVertical: 6,
+    borderRadius: 16,
+  },
+  statusText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  cardDivider: {
+    height: 1,
+    backgroundColor: '#E0E0E0',
+    marginHorizontal: 16,
+  },
+  cardContent: {
+    padding: 16,
+  },
+  cardRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  cardIconContainer: {
+    width: 32,
+    height: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#E3F2FD',
+    borderRadius: 16,
+    marginRight: 12,
+  },
+  cardLabel: {
+    width: 60,
+    fontSize: 14,
+    color: '#616161',
+    marginRight: 8,
+  },
+  cardValue: {
+    flex: 1,
+    fontSize: 15,
+    color: '#212121',
+  },
+  diagnosisText: {
+    fontStyle: 'italic',
+  },
+  cardActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: '#FAFAFA',
+  },
+  viewDetailsText: {
+    fontSize: 14,
+    color: '#1976D2',
+    marginRight: 4,
+  },
+  
+  // Floating action button
+  addButton: {
+    position: 'absolute',
+    right: 24,
+    bottom: 24,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#1976D2',
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 2 },
   },
 }); 

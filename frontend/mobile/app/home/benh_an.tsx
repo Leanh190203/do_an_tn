@@ -1,9 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Alert, RefreshControl, TextInput } from 'react-native';
+import { 
+  View, 
+  Text, 
+  FlatList, 
+  TouchableOpacity, 
+  ActivityIndicator, 
+  Alert, 
+  RefreshControl, 
+  TextInput,
+  Image,
+  StatusBar,
+  Animated
+} from 'react-native';
 import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import medicalRecordService from '../services/medicalRecordService';
 import { styles } from '../styles/benh_an.styles';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface MedicalRecordItem {
   id: number;
@@ -18,6 +31,8 @@ interface MedicalRecordItem {
   pet_id: number;
 }
 
+const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
+
 export default function MedicalRecordsScreen() {
   const router = useRouter();
   const [medicalRecords, setMedicalRecords] = useState<MedicalRecordItem[]>([]);
@@ -25,7 +40,11 @@ export default function MedicalRecordsScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedSpecies, setSelectedSpecies] = useState('all');
+  const [selectedStatusFilter, setSelectedStatusFilter] = useState('all');
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
+  
+  // Animation value for search bar
+  const searchBarHeight = useState(new Animated.Value(0))[0];
 
   const loadMedicalRecords = async () => {
     try {
@@ -47,7 +66,15 @@ export default function MedicalRecordsScreen() {
 
   useEffect(() => {
     filterRecords();
-  }, [searchQuery, selectedSpecies, medicalRecords]);
+  }, [searchQuery, selectedStatusFilter, medicalRecords]);
+
+  useEffect(() => {
+    Animated.timing(searchBarHeight, {
+      toValue: isSearchVisible ? 60 : 0,
+      duration: 300,
+      useNativeDriver: false
+    }).start();
+  }, [isSearchVisible]);
 
   const filterRecords = () => {
     let filtered = [...medicalRecords];
@@ -58,7 +85,8 @@ export default function MedicalRecordsScreen() {
       filtered = filtered.filter(record => 
         record.petName?.toLowerCase().includes(query) ||
         record.owner?.toLowerCase().includes(query) ||
-        record.diagnosis?.toLowerCase().includes(query)
+        record.diagnosis?.toLowerCase().includes(query) ||
+        record.service?.toLowerCase().includes(query)
       );
     }
     
@@ -68,13 +96,42 @@ export default function MedicalRecordsScreen() {
   const onRefresh = () => {
     setRefreshing(true);
     setSearchQuery('');
-    setSelectedSpecies('all');
+    setSelectedStatusFilter('all');
     loadMedicalRecords();
   };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('vi-VN');
+  };
+
+  const toggleSearchBar = () => {
+    setIsSearchVisible(!isSearchVisible);
+    if (isSearchVisible) {
+      setSearchQuery('');
+    }
+  };
+
+  const getStatusColor = (date: string) => {
+    const recordDate = new Date(date);
+    const today = new Date();
+    
+    if (recordDate > today) {
+      return '#FF9800'; // Upcoming appointment (orange)
+    } else {
+      return '#4CAF50'; // Past record (green)
+    }
+  };
+
+  const getStatusText = (date: string) => {
+    const recordDate = new Date(date);
+    const today = new Date();
+    
+    if (recordDate > today) {
+      return 'Lịch hẹn';
+    } else {
+      return 'Hoàn thành';
+    }
   };
 
   if (loading) {
@@ -87,10 +144,27 @@ export default function MedicalRecordsScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>📋 Lịch sử khám & Lịch hẹn</Text>
+    <View style={styles.rootContainer}>
+      <StatusBar barStyle="light-content" backgroundColor="#1976D2" />
       
-      <View style={styles.searchContainer}>
+      {/* Header */}
+      <LinearGradient
+        colors={['#1976D2', '#2196F3']}
+        style={styles.header}
+      >
+        <TouchableOpacity 
+          style={styles.backButton}
+          onPress={() => router.back()}
+        >
+          <Ionicons name="arrow-back" size={24} color="#FFF" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Lịch sử khám & Lịch hẹn</Text>
+        <TouchableOpacity onPress={toggleSearchBar}>
+          <Ionicons name={isSearchVisible ? "close" : "search"} size={24} color="#FFF" />
+        </TouchableOpacity>
+      </LinearGradient>
+      
+      <Animated.View style={[styles.searchContainer, { height: searchBarHeight }]}>
         <View style={styles.searchInputContainer}>
           <Ionicons name="search" size={20} color="#666" style={styles.searchIcon} />
           <TextInput
@@ -105,52 +179,144 @@ export default function MedicalRecordsScreen() {
             </TouchableOpacity>
           )}
         </View>
-      </View>
+      </Animated.View>
       
-      {filteredRecords.length === 0 ? (
-        <View style={styles.emptyContainer}>
-          <Ionicons name="medical" size={60} color="#BBDEFB" />
-          <Text style={styles.emptyText}>
-            {searchQuery ? 'Không tìm thấy kết quả phù hợp' : 'Bạn chưa có lịch sử khám nào. Hãy đặt lịch khám ngay!'}
-          </Text>
+      <View style={styles.container}>
+        <View style={styles.filterContainer}>
+          <TouchableOpacity
+            style={[
+              styles.filterButton,
+              selectedStatusFilter === 'all' && styles.filterButtonActive
+            ]}
+            onPress={() => setSelectedStatusFilter('all')}
+          >
+            <Text style={[
+              styles.filterButtonText,
+              selectedStatusFilter === 'all' && styles.filterButtonTextActive
+            ]}>Tất cả</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity
+            style={[
+              styles.filterButton,
+              selectedStatusFilter === 'appointments' && styles.filterButtonActive
+            ]}
+            onPress={() => setSelectedStatusFilter('appointments')}
+          >
+            <Text style={[
+              styles.filterButtonText,
+              selectedStatusFilter === 'appointments' && styles.filterButtonTextActive
+            ]}>Lịch hẹn</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity
+            style={[
+              styles.filterButton,
+              selectedStatusFilter === 'completed' && styles.filterButtonActive
+            ]}
+            onPress={() => setSelectedStatusFilter('completed')}
+          >
+            <Text style={[
+              styles.filterButtonText,
+              selectedStatusFilter === 'completed' && styles.filterButtonTextActive
+            ]}>Đã khám</Text>
+          </TouchableOpacity>
         </View>
-      ) : (
-        <FlatList
-          data={filteredRecords}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
+        
+        {filteredRecords.length === 0 ? (
+          <View style={styles.emptyContainer}>
+            <MaterialCommunityIcons name="clipboard-text-outline" size={80} color="#BBDEFB" />
+            <Text style={styles.emptyTitle}>Không có bệnh án nào</Text>
+            <Text style={styles.emptyText}>
+              {searchQuery ? 'Không tìm thấy kết quả phù hợp với tìm kiếm' : 'Bạn chưa có lịch sử khám nào. Hãy đặt lịch khám ngay!'}
+            </Text>
             <TouchableOpacity 
-              style={styles.card}
-              onPress={() => router.push(`/home/benh_an/${item.id}`)}
+              style={styles.emptyButton}
+              onPress={() => router.push('/home/them_benh_an')}
             >
-              <View style={styles.cardHeader}>
-                <Text style={styles.petName}>{item.petName}</Text>
-                <Ionicons name="paw" size={24} color="#1976D2" />
-              </View>
-              <Text style={styles.cardText}>👤 Chủ: {item.owner} {item.phone ? `(${item.phone})` : ''}</Text>
-              <Text style={styles.cardText}>📅 Ngày khám: {formatDate(item.date)}</Text>
-              <Text style={styles.cardText}>🩺 Triệu chứng / Vấn đề: {item.diagnosis}</Text>
-              <Text style={styles.cardText}>🛠️ Dịch vụ: {item.service}</Text>
-              <Text style={styles.cardText}>🏥 Phòng khám: {item.clinic}</Text>
-              {item.notes && <Text style={styles.cardText} numberOfLines={2}>📝 Ghi chú: {item.notes}</Text>}
+              <Text style={styles.emptyButtonText}>Đặt lịch khám</Text>
             </TouchableOpacity>
-          )}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-              colors={["#1976D2"]}
-            />
-          }
-        />
-      )}
+          </View>
+        ) : (
+          <FlatList
+            data={filteredRecords}
+            keyExtractor={(item) => item.id.toString()}
+            contentContainerStyle={styles.listContainer}
+            renderItem={({ item }) => {
+              const statusColor = getStatusColor(item.date);
+              const statusText = getStatusText(item.date);
+              
+              return (
+                <AnimatedTouchable 
+                  style={styles.card}
+                  onPress={() => router.push(`/home/benh_an/${item.id}`)}
+                  activeOpacity={0.7}
+                >
+                  <View style={styles.cardHeader}>
+                    <View style={styles.petInfoContainer}>
+                      <Text style={styles.petName}>{item.petName}</Text>
+                      <Text style={styles.petOwner}>{item.owner}</Text>
+                    </View>
+                    <View style={[styles.statusBadge, { backgroundColor: statusColor }]}>
+                      <Text style={styles.statusText}>{statusText}</Text>
+                    </View>
+                  </View>
+                  
+                  <View style={styles.cardDivider} />
+                  
+                  <View style={styles.cardContent}>
+                    <View style={styles.cardRow}>
+                      <View style={styles.cardIconContainer}>
+                        <Ionicons name="calendar" size={20} color="#1976D2" />
+                      </View>
+                      <Text style={styles.cardLabel}>Ngày:</Text>
+                      <Text style={styles.cardValue}>{formatDate(item.date)}</Text>
+                    </View>
+                    
+                    <View style={styles.cardRow}>
+                      <View style={styles.cardIconContainer}>
+                        <MaterialCommunityIcons name="hospital" size={20} color="#1976D2" />
+                      </View>
+                      <Text style={styles.cardLabel}>Dịch vụ:</Text>
+                      <Text style={styles.cardValue}>{item.service}</Text>
+                    </View>
+                    
+                    {item.diagnosis && (
+                      <View style={styles.cardRow}>
+                        <View style={styles.cardIconContainer}>
+                          <Ionicons name="medical" size={20} color="#1976D2" />
+                        </View>
+                        <Text style={styles.cardLabel}>Vấn đề:</Text>
+                        <Text style={[styles.cardValue, styles.diagnosisText]} numberOfLines={1}>
+                          {item.diagnosis}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                  
+                  <View style={styles.cardActions}>
+                    <Text style={styles.viewDetailsText}>Xem chi tiết</Text>
+                    <Ionicons name="chevron-forward" size={16} color="#1976D2" />
+                  </View>
+                </AnimatedTouchable>
+              );
+            }}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                colors={["#1976D2"]}
+              />
+            }
+          />
+        )}
+      </View>
       
       <TouchableOpacity 
         style={styles.addButton} 
         onPress={() => router.push('/home/them_benh_an')}
       >
-        <Ionicons name="add-circle" size={28} color="#fff" />
-        <Text style={styles.addButtonText}>Đặt lịch khám</Text>
+        <Ionicons name="add" size={24} color="#fff" />
       </TouchableOpacity>
     </View>
   );

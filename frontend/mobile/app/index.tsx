@@ -28,16 +28,16 @@ const banners = [
   require('@/assets/images/anh4.jpg'),
 ];
 
-// Danh sách dịch vụ nổi bật
+// Danh sách dịch vụ nội bệnh
 const services = [
-  { id: '1', name: 'Khám Tổng Quát', icon: 'stethoscope', color: '#4CAF50', image: require('@/assets/images/anh1.jpg') },
-  { id: '2', name: 'Tiêm Phòng', icon: 'needle', color: '#F57C00', image: require('@/assets/images/anh2.jpg') },
-  { id: '3', name: 'Chữa Bệnh', icon: 'medical-bag', color: '#E91E63', image: require('@/assets/images/anh3.jpg') },
-  { id: '4', name: 'Tắm & Spa', icon: 'shower', color: '#039BE5', image: require('@/assets/images/anh4.jpg') },
-  { id: '5', name: 'Cắt Tỉa Lông', icon: 'content-cut', color: '#9C27B0', image: require('@/assets/images/anh5.jpg') },
-  { id: '6', name: 'Khám Răng', icon: 'tooth', color: '#00BCD4', image: require('@/assets/images/anh6.jpg') },
-  { id: '7', name: 'Siêu Âm', icon: 'heart-pulse', color: '#FF5722', image: require('@/assets/images/anh4.jpg') },
-  { id: '8', name: 'Xét Nghiệm', icon: 'flask', color: '#607D8B', image: require('@/assets/images/anh1.jpg') },
+  { id: '1', name: 'Khám nội', icon: 'stethoscope', color: '#4CAF50', image: require('@/assets/images/anh1.jpg') },
+  { id: '2', name: 'Điều trị nội khoa', icon: 'medical-bag', color: '#E91E63', image: require('@/assets/images/anh3.jpg') },
+  { id: '3', name: 'Theo dõi bệnh lý', icon: 'clipboard-pulse', color: '#039BE5', image: require('@/assets/images/anh4.jpg') },
+  { id: '4', name: 'Dấu hiệu sinh tồn', icon: 'pulse', color: '#F57C00', image: require('@/assets/images/anh2.jpg') },
+  { id: '5', name: 'Tư vấn dinh dưỡng', icon: 'food-apple', color: '#9C27B0', image: require('@/assets/images/anh5.jpg') },
+  { id: '6', name: 'Phòng ngừa bệnh', icon: 'shield-check', color: '#00BCD4', image: require('@/assets/images/anh6.jpg') },
+  { id: '7', name: 'Xét nghiệm máu', icon: 'test-tube', color: '#FF5722', image: require('@/assets/images/anh4.jpg') },
+  { id: '8', name: 'Siêu âm nội', icon: 'doctor', color: '#607D8B', image: require('@/assets/images/anh1.jpg') },
 ];
 
 // Danh sách các thú cưng được hiển thị gần đây
@@ -282,19 +282,21 @@ export default function HomeScreen() {
         {/* Services */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Dịch vụ nổi bật</Text>
+            <Text style={styles.sectionTitle}>Dịch vụ nội bệnh</Text>
           </View>
           <View style={styles.servicesGrid}>
             {services.map((service) => (
-              <View 
+              <TouchableOpacity 
                 key={service.id} 
                 style={styles.serviceItem}
+                activeOpacity={0.7}
+                onPress={() => {}}
               >
                 <View style={[styles.serviceIconContainer, { backgroundColor: `${service.color}10` }]}>
                   <MaterialCommunityIcons name={service.icon as any} size={26} color={service.color} />
                 </View>
                 <Text style={styles.serviceText}>{service.name}</Text>
-              </View>
+              </TouchableOpacity>
             ))}
           </View>
         </View>
@@ -314,7 +316,7 @@ export default function HomeScreen() {
                 key={pet.id} 
                 style={styles.petCard}
                 activeOpacity={0.7}
-                onPress={() => Alert.alert("Thông báo", `Xem thông tin của ${pet.name}`)}
+                onPress={() => {}}
               >
                 <ImageBackground 
                   source={pet.image} 
@@ -621,78 +623,6 @@ const styles = StyleSheet.create({
     color: '#424242',
     textAlign: 'center',
   },
-  recentPetsContainer: {
-    paddingRight: 16,
-    paddingLeft: 4,
-    paddingTop: 8,
-    paddingBottom: 16,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 5,
-    elevation: 1,
-  },
-  petCard: {
-    width: 160,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    overflow: 'hidden',
-    marginLeft: 12,
-    borderWidth: 1,
-    borderColor: '#F0F0F0',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  petImage: {
-    width: '100%',
-    height: 130,
-    justifyContent: 'flex-end',
-  },
-  petImageOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.2)',
-  },
-  petTypeBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-    position: 'absolute',
-    top: 8,
-    right: 8,
-  },
-  petTypeText: {
-    color: '#FFFFFF',
-    fontSize: 10,
-    fontWeight: 'bold',
-    marginLeft: 3,
-  },
-  petInfoContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-  },
-  petInfo: {
-    flex: 1,
-  },
-  petName: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    color: '#212121',
-  },
-  petBreed: {
-    fontSize: 12,
-    color: '#757575',
-    marginTop: 2,
-  },
   newsContainer: {
     marginBottom: 16,
     backgroundColor: '#FFFFFF',
@@ -811,6 +741,78 @@ const styles = StyleSheet.create({
   footerTabText: {
     fontSize: 12,
     color: '#9E9E9E',
+    marginTop: 2,
+  },
+  recentPetsContainer: {
+    paddingRight: 16,
+    paddingLeft: 4,
+    paddingTop: 8,
+    paddingBottom: 16,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 5,
+    elevation: 1,
+  },
+  petCard: {
+    width: 160,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    overflow: 'hidden',
+    marginLeft: 12,
+    borderWidth: 1,
+    borderColor: '#F0F0F0',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  petImage: {
+    width: '100%',
+    height: 130,
+    justifyContent: 'flex-end',
+  },
+  petImageOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+  },
+  petTypeBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    position: 'absolute',
+    top: 8,
+    right: 8,
+  },
+  petTypeText: {
+    color: '#FFFFFF',
+    fontSize: 10,
+    fontWeight: 'bold',
+    marginLeft: 3,
+  },
+  petInfoContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+  },
+  petInfo: {
+    flex: 1,
+  },
+  petName: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: '#212121',
+  },
+  petBreed: {
+    fontSize: 12,
+    color: '#757575',
     marginTop: 2,
   },
 });
