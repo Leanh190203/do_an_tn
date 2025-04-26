@@ -96,6 +96,50 @@ const medicalRecordService = {
     }
   },
   
+  // Get medical records by customer ID
+  getMedicalRecordsByCustomerId: async (customerId: number) => {
+    try {
+      const token = global.authToken;
+      const response = await api.get(`/appointments/customer/${customerId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      
+      // Map appointments to medical records format with detailed information
+      return response.data.map((appointment: any) => ({
+        id: appointment.id,
+        pet_id: appointment.pet_id,
+        customer_id: appointment.customer_id,
+        date: appointment.appointment_date,
+        service: appointment.service,
+        notes: appointment.notes || '',
+        diagnosis: appointment.diagnosis || '',
+        clinic: appointment.clinic || '',
+        status: appointment.status,
+        // Giữ lại thông tin thú cưng và chủ sở hữu
+        pet: appointment.pet,
+        customer: appointment.customer,
+        petName: appointment.petName, // Dự phòng nếu không có object pet
+        customerName: appointment.customerName, // Dự phòng nếu không có object customer
+        // Thêm thông tin khác nếu có
+        formatted_date: appointment.formatted_date,
+        formatted_time: appointment.formatted_time
+      }));
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+        if (axiosError.response) {
+          const errorMessage = axiosError.response.data?.message || 'Failed to fetch customer medical records';
+          throw new Error(errorMessage);
+        } else if (axiosError.request) {
+          throw new Error('No response received from server. Please check your network connection.');
+        }
+      }
+      throw new Error('An unknown error occurred while fetching customer medical records.');
+    }
+  },
+  
   // Get a specific medical record by ID
   getMedicalRecord: async (id: number) => {
     try {

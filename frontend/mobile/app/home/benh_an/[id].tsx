@@ -12,13 +12,17 @@ import { Ionicons } from '@expo/vector-icons';
 import medicalRecordService from '../../services/medicalRecordService';
 import { styles } from '../../styles/benh_an_detail.styles';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useAuth } from '../../context/AuthContext';
+import customerService from '../../services/customerService';
 
 export default function MedicalRecordDetailScreen() {
   const { id } = useLocalSearchParams();
   const recordId = typeof id === 'string' ? parseInt(id, 10) : 0;
   const router = useRouter();
+  const { user } = useAuth();
   const [record, setRecord] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [currentCustomer, setCurrentCustomer] = useState<{ id: number } | null>(null);
 
   useEffect(() => {
     const loadRecordDetails = async () => {
@@ -29,7 +33,31 @@ export default function MedicalRecordDetailScreen() {
       }
 
       try {
+        // Nếu người dùng đã đăng nhập, lấy thông tin customer
+        let customerData = null;
+        if (user) {
+          try {
+            customerData = await customerService.getCustomerByUserId(user.id);
+            if (customerData) {
+              setCurrentCustomer(customerData);
+            }
+          } catch (error) {
+            console.error('Lỗi khi tải thông tin khách hàng:', error);
+          }
+        }
+
         const recordData = await medicalRecordService.getMedicalRecord(recordId);
+        
+        // Kiểm tra xem người dùng có quyền xem bệnh án này không
+        if (user && customerData && recordData.customer_id !== customerData.id) {
+          Alert.alert(
+            'Không có quyền truy cập', 
+            'Bạn không có quyền xem bệnh án này.',
+            [{ text: 'OK', onPress: () => router.back() }]
+          );
+          return;
+        }
+        
         setRecord(recordData);
       } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -41,7 +69,7 @@ export default function MedicalRecordDetailScreen() {
     };
 
     loadRecordDetails();
-  }, [recordId, router]);
+  }, [recordId, router, user]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -52,6 +80,46 @@ export default function MedicalRecordDetailScreen() {
       hour: '2-digit',
       minute: '2-digit'
     });
+  };
+
+  // Hàm xác định màu sắc dựa vào trạng thái
+  const getStatusColor = (record: any) => {
+    // Sử dụng status để xác định màu sắc thay vì dựa vào ngày
+    switch (record.status) {
+      case 'completed':
+        return '#4CAF50'; // Đã hoàn thành (xanh lá)
+      case 'confirmed':
+        return '#1976D2'; // Đã xác nhận (xanh dương)
+      case 'pending':
+        return '#FF9800'; // Đang chờ (cam)
+      case 'cancelled':
+        return '#F44336'; // Đã hủy (đỏ)
+      default:
+        // Nếu không có status, kiểm tra theo ngày
+        const recordDate = new Date(record.date);
+        const today = new Date();
+        return recordDate > today ? '#FF9800' : '#4CAF50';
+    }
+  };
+
+  // Hàm xác định text hiển thị dựa vào trạng thái
+  const getStatusText = (record: any) => {
+    // Sử dụng status để xác định text hiển thị
+    switch (record.status) {
+      case 'completed':
+        return 'Đã khám';
+      case 'confirmed':
+        return 'Đã xác nhận';
+      case 'pending':
+        return 'Chờ xác nhận';
+      case 'cancelled':
+        return 'Đã hủy';
+      default:
+        // Nếu không có status, kiểm tra theo ngày
+        const recordDate = new Date(record.date);
+        const today = new Date();
+        return recordDate > today ? 'Lịch hẹn' : 'Hoàn thành';
+    }
   };
 
   const handleDelete = async () => {
@@ -157,12 +225,25 @@ export default function MedicalRecordDetailScreen() {
           <View style={styles.row}>
             <Ionicons name="medical" size={20} color="#1976D2" />
             <Text style={styles.label}>Chẩn đoán:</Text>
-            <Text style={styles.value}>{record.diagnosis}</Text>
+            <Text style={styles.value}>{record.diagnosis || 'Chưa có chẩn đoán'}</Text>
           </View>
           <View style={styles.row}>
             <Ionicons name="business" size={20} color="#1976D2" />
             <Text style={styles.label}>Phòng khám:</Text>
             <Text style={styles.value}>{record.clinic}</Text>
+          </View>
+          <View style={styles.row}>
+            <Ionicons name="hourglass" size={20} color="#1976D2" />
+            <Text style={styles.label}>Trạng thái:</Text>
+            <View style={[
+              styles.statusBadge, 
+              { 
+                backgroundColor: getStatusColor(record),
+                marginLeft: 8
+              }
+            ]}>
+              <Text style={styles.statusBadgeText}>{getStatusText(record)}</Text>
+            </View>
           </View>
         </View>
 
@@ -177,23 +258,37 @@ export default function MedicalRecordDetailScreen() {
         )}
       </View>
 
-      <View style={styles.actionButtons}>
+      {/* Chỉ hiển thị nút xóa và chỉnh sửa nếu đây là bệnh án của khách hàng đang đăng nhập */}
+      {(!user || (currentCustomer && record.customer_id === currentCustomer.id)) && (
+        <View style={styles.actionButtons}>
+          <TouchableOpacity 
+            style={[styles.actionButton, styles.editButton]} 
+            onPress={() => router.push(`/home/edit_benh_an/${recordId}` as any)}
+          >
+            <Ionicons name="create" size={20} color="#fff" />
+            <Text style={styles.actionButtonText}>Chỉnh sửa</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={[styles.actionButton, styles.deleteButton]} 
+            onPress={handleDelete}
+          >
+            <Ionicons name="trash" size={20} color="#fff" />
+            <Text style={styles.actionButtonText}>Xóa</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {/* Thêm nút xem thú cưng */}
+      {record.pet_id && currentCustomer && record.customer_id === currentCustomer.id && (
         <TouchableOpacity 
-          style={[styles.actionButton, styles.editButton]} 
-          onPress={() => router.push(`/home/edit_benh_an/${recordId}` as any)}
+          style={styles.viewPetButton}
+          onPress={() => router.push(`/home/my_pets?edit=${record.pet_id}` as any)}
         >
-          <Ionicons name="create" size={20} color="#fff" />
-          <Text style={styles.actionButtonText}>Chỉnh sửa</Text>
+          <MaterialCommunityIcons name="paw" size={20} color="#1976D2" />
+          <Text style={styles.viewPetButtonText}>Sửa thông tin thú cưng</Text>
         </TouchableOpacity>
-        
-        <TouchableOpacity 
-          style={[styles.actionButton, styles.deleteButton]} 
-          onPress={handleDelete}
-        >
-          <Ionicons name="trash" size={20} color="#fff" />
-          <Text style={styles.actionButtonText}>Xóa</Text>
-        </TouchableOpacity>
-      </View>
+      )}
     </ScrollView>
   );
 } 

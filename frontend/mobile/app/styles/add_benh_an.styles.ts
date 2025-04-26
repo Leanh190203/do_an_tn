@@ -314,32 +314,30 @@ export const styles = StyleSheet.create({
     fontSize: 14,
   },
   noPetsContainer: {
-    backgroundColor: '#FFF3E0',
-    padding: 12,
-    borderRadius: 8,
     marginTop: 10,
-    borderWidth: 1,
-    borderColor: '#FFE0B2',
+    padding: 15,
+    backgroundColor: '#FFF9E6',
+    borderRadius: 8,
+    borderLeftWidth: 4,
+    borderLeftColor: '#FFC107',
   },
   noPetsMessage: {
-    color: '#F57C00',
     fontSize: 14,
-    textAlign: 'center',
+    color: '#5D4037',
     marginBottom: 10,
   },
   addPetButton: {
-    backgroundColor: '#FF9800',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 20,
-    alignSelf: 'center',
-    marginTop: 4,
+    backgroundColor: '#1976D2',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 6,
+    alignSelf: 'flex-start',
+    marginTop: 5,
   },
   addPetButtonText: {
     color: '#FFFFFF',
-    fontSize: 14,
     fontWeight: 'bold',
-    textAlign: 'center',
+    fontSize: 14,
   },
   
   // Modal styles for appointment confirmation
@@ -466,5 +464,59 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 14,
     marginRight: 5,
+  },
+  // Styles mới cho phần chọn thú cưng
+  customPetForm: {
+    marginTop: 10,
+  },
+  petSelectionToggle: {
+    flexDirection: 'row',
+    marginBottom: 15,
+    borderRadius: 8,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+  },
+  toggleButton: {
+    flex: 1,
+    paddingVertical: 10,
+    alignItems: 'center',
+    backgroundColor: '#F5F5F5',
+  },
+  toggleButtonActive: {
+    backgroundColor: '#1976D2',
+  },
+  toggleText: {
+    color: '#757575',
+    fontWeight: '500',
+    fontSize: 14,
+  },
+  toggleTextActive: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
+  
+  // Styles cho phần hiển thị chủ thú cưng
+  selectedOwnerContainer: {
+    backgroundColor: '#E3F2FD',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderLeftWidth: 3,
+    borderLeftColor: '#1976D2',
+  },
+  selectedOwnerLabel: {
+    fontSize: 14,
+    color: '#1976D2',
+    fontWeight: 'bold',
+    marginRight: 8,
+  },
+  selectedOwnerValue: {
+    fontSize: 14,
+    color: '#333333',
+    flex: 1,
   },
 }); 

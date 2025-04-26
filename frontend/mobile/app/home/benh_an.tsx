@@ -17,6 +17,8 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import medicalRecordService from '../services/medicalRecordService';
 import { styles } from '../styles/benh_an.styles';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useAuth } from '../context/AuthContext';
+import customerService from '../services/customerService';
 
 interface MedicalRecordItem {
   id: number;
@@ -48,6 +50,7 @@ const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
 export default function MedicalRecordsScreen() {
   const router = useRouter();
+  const { user } = useAuth();
   const [medicalRecords, setMedicalRecords] = useState<MedicalRecordItem[]>([]);
   const [filteredRecords, setFilteredRecords] = useState<MedicalRecordItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -55,15 +58,45 @@ export default function MedicalRecordsScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatusFilter, setSelectedStatusFilter] = useState('all');
   const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const [currentCustomer, setCurrentCustomer] = useState<{ id: number } | null>(null);
   
   // Animation value for search bar
   const searchBarHeight = useState(new Animated.Value(0))[0];
 
   const loadMedicalRecords = async () => {
     try {
-      const records = await medicalRecordService.getAllMedicalRecords();
-      setMedicalRecords(records);
-      setFilteredRecords(records);
+      setLoading(true);
+      
+      // Nếu người dùng đã đăng nhập, lấy thông tin customer
+      if (user) {
+        try {
+          const customerData = await customerService.getCustomerByUserId(user.id);
+          if (customerData) {
+            setCurrentCustomer(customerData);
+            
+            // Lấy bệnh án theo customer_id trực tiếp từ API
+            const customerRecords = await medicalRecordService.getMedicalRecordsByCustomerId(customerData.id);
+            setMedicalRecords(customerRecords);
+            setFilteredRecords(customerRecords);
+          } else {
+            // Không tìm thấy thông tin khách hàng
+            const records = await medicalRecordService.getAllMedicalRecords();
+            setMedicalRecords(records);
+            setFilteredRecords(records);
+          }
+        } catch (error) {
+          console.error('Lỗi khi tải thông tin khách hàng:', error);
+          // Trong trường hợp lỗi, lấy tất cả bệnh án
+          const records = await medicalRecordService.getAllMedicalRecords();
+          setMedicalRecords(records);
+          setFilteredRecords(records);
+        }
+      } else {
+        // Nếu chưa đăng nhập, lấy tất cả bệnh án
+        const records = await medicalRecordService.getAllMedicalRecords();
+        setMedicalRecords(records);
+        setFilteredRecords(records);
+      }
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       Alert.alert('Lỗi', 'Không thể tải danh sách bệnh án: ' + errorMessage);
@@ -107,11 +140,27 @@ export default function MedicalRecordsScreen() {
     
     // Filter by status
     if (selectedStatusFilter !== 'all') {
-      const now = new Date();
       if (selectedStatusFilter === 'appointments') {
-        filtered = filtered.filter(record => new Date(record.date) > now);
+        // Lịch hẹn: bao gồm các trạng thái pending và confirmed, 
+        // hoặc nếu không có status thì dựa vào ngày
+        filtered = filtered.filter(record => 
+          record.status === 'pending' || 
+          record.status === 'confirmed' || 
+          (
+            !record.status && 
+            new Date(record.date) > new Date()
+          )
+        );
       } else if (selectedStatusFilter === 'completed') {
-        filtered = filtered.filter(record => new Date(record.date) <= now);
+        // Đã khám: bao gồm trạng thái completed,
+        // hoặc nếu không có status thì dựa vào ngày
+        filtered = filtered.filter(record => 
+          record.status === 'completed' || 
+          (
+            !record.status && 
+            new Date(record.date) <= new Date()
+          )
+        );
       }
     }
     
@@ -120,8 +169,6 @@ export default function MedicalRecordsScreen() {
 
   const onRefresh = () => {
     setRefreshing(true);
-    setSearchQuery('');
-    setSelectedStatusFilter('all');
     loadMedicalRecords();
   };
 
@@ -137,25 +184,41 @@ export default function MedicalRecordsScreen() {
     }
   };
 
-  const getStatusColor = (date: string) => {
-    const recordDate = new Date(date);
-    const today = new Date();
-    
-    if (recordDate > today) {
-      return '#FF9800'; // Upcoming appointment (orange)
-    } else {
-      return '#4CAF50'; // Past record (green)
+  const getStatusColor = (record: MedicalRecordItem) => {
+    // Sử dụng status để xác định màu sắc thay vì dựa vào ngày
+    switch (record.status) {
+      case 'completed':
+        return '#4CAF50'; // Đã hoàn thành (xanh lá)
+      case 'confirmed':
+        return '#1976D2'; // Đã xác nhận (xanh dương)
+      case 'pending':
+        return '#FF9800'; // Đang chờ (cam)
+      case 'cancelled':
+        return '#F44336'; // Đã hủy (đỏ)
+      default:
+        // Nếu không có status, kiểm tra theo ngày như cũ
+        const recordDate = new Date(record.date);
+        const today = new Date();
+        return recordDate > today ? '#FF9800' : '#4CAF50';
     }
   };
 
-  const getStatusText = (date: string) => {
-    const recordDate = new Date(date);
-    const today = new Date();
-    
-    if (recordDate > today) {
-      return 'Lịch hẹn';
-    } else {
-      return 'Hoàn thành';
+  const getStatusText = (record: MedicalRecordItem) => {
+    // Sử dụng status để xác định text hiển thị
+    switch (record.status) {
+      case 'completed':
+        return 'Đã khám';
+      case 'confirmed':
+        return 'Đã xác nhận';
+      case 'pending':
+        return 'Chờ xác nhận';
+      case 'cancelled':
+        return 'Đã hủy';
+      default:
+        // Nếu không có status, kiểm tra theo ngày như cũ
+        const recordDate = new Date(record.date);
+        const today = new Date();
+        return recordDate > today ? 'Lịch hẹn' : 'Hoàn thành';
     }
   };
 
@@ -252,9 +315,6 @@ export default function MedicalRecordsScreen() {
           <View style={styles.emptyContainer}>
             <MaterialCommunityIcons name="clipboard-text-outline" size={80} color="#BBDEFB" />
             <Text style={styles.emptyTitle}>Không có bệnh án nào</Text>
-            <Text style={styles.emptyText}>
-              {searchQuery ? 'Không tìm thấy kết quả phù hợp với tìm kiếm' : 'Bạn chưa có lịch sử khám nào. Hãy đặt lịch khám ngay!'}
-            </Text>
             <TouchableOpacity 
               style={styles.emptyButton}
               onPress={() => router.push('/home/them_benh_an')}
@@ -268,8 +328,8 @@ export default function MedicalRecordsScreen() {
             keyExtractor={(item) => item.id.toString()}
             contentContainerStyle={styles.listContainer}
             renderItem={({ item }) => {
-              const statusColor = getStatusColor(item.date);
-              const statusText = getStatusText(item.date);
+              const statusColor = getStatusColor(item);
+              const statusText = getStatusText(item);
               
               return (
                 <AnimatedTouchable 
@@ -320,6 +380,16 @@ export default function MedicalRecordsScreen() {
                           {item.diagnosis}
                         </Text>
                       </View>
+                    )}
+
+                    {item.pet_id && currentCustomer && item.customer_id === currentCustomer.id && (
+                      <TouchableOpacity 
+                        style={styles.viewPetButton}
+                        onPress={() => router.push(`/home/my_pets?edit=${item.pet_id}` as any)}
+                      >
+                        <MaterialCommunityIcons name="paw" size={16} color="#1976D2" />
+                        <Text style={styles.viewPetButtonText}>Sửa thú cưng</Text>
+                      </TouchableOpacity>
                     )}
                   </View>
                   

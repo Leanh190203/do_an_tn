@@ -129,4 +129,34 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     marginLeft: 8,
   },
+  statusBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  statusBadgeText: {
+    color: '#FFF',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  viewPetButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#E1F5FE',
+    padding: 15,
+    borderRadius: 8,
+    margin: 15,
+    marginTop: 5,
+    borderWidth: 1,
+    borderColor: '#1976D2',
+  },
+  viewPetButtonText: {
+    color: '#1976D2',
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginLeft: 8,
+  }
 }); 

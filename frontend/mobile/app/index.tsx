@@ -298,6 +298,27 @@ export default function HomeScreen() {
                 <Text style={styles.serviceText}>{service.name}</Text>
               </TouchableOpacity>
             ))}
+            <TouchableOpacity 
+              style={[styles.serviceCard, { backgroundColor: '#E3F2FD' }]}
+              onPress={() => router.push('/home/benh_an')}
+            >
+              <View style={styles.serviceCardContent}>
+                <MaterialCommunityIcons name="clipboard-text" size={42} color="#1976D2" style={styles.serviceIcon} />
+                <Text style={styles.serviceTitle}>Lịch sử khám</Text>
+                <Text style={styles.serviceDescription}>Xem lịch hẹn & bệnh án</Text>
+              </View>
+            </TouchableOpacity>
+            
+            <TouchableOpacity 
+              style={[styles.serviceCard, { backgroundColor: '#E8F5E9' }]}
+              onPress={() => router.push('/home/my_pets')}
+            >
+              <View style={styles.serviceCardContent}>
+                <MaterialCommunityIcons name="paw" size={42} color="#43A047" style={styles.serviceIcon} />
+                <Text style={styles.serviceTitle}>Thú cưng của tôi</Text>
+                <Text style={styles.serviceDescription}>Quản lý thông tin thú cưng</Text>
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -814,5 +835,29 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#757575',
     marginTop: 2,
+  },
+  serviceCard: {
+    width: (width - 80) / 4,
+    height: 120,
+    borderRadius: 12,
+    overflow: 'hidden',
+    marginBottom: 16,
+  },
+  serviceCardContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  serviceIcon: {
+    marginBottom: 8,
+  },
+  serviceTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#212121',
+  },
+  serviceDescription: {
+    fontSize: 12,
+    color: '#616161',
   },
 });

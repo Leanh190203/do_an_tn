@@ -28,6 +28,12 @@ interface Pet {
   id: number;
   name: string;
   species: string;
+  age?: number;
+  weight?: number;
+  description?: string;
+  symptoms?: string;
+  customer_id: number;
+  gender?: string;
 }
 
 interface Customer {
@@ -76,6 +82,11 @@ export default function ThemBenhAnScreen() {
   const [petDetails, setPetDetails] = useState<Pet | null>(null);
   const [customerDetails, setCustomerDetails] = useState<Customer | null>(null);
 
+  // Thêm state mới để lưu thông tin thú cưng nhập tự do
+  const [customPetName, setCustomPetName] = useState('');
+  const [customPetSpecies, setCustomPetSpecies] = useState('');
+  const [isCustomPet, setIsCustomPet] = useState(false);
+
   // Load pets and customers, with special handling for logged-in users
   useEffect(() => {
     async function loadData() {
@@ -118,13 +129,6 @@ export default function ThemBenhAnScreen() {
               // Vẫn tải tất cả thú cưng nếu không tìm thấy thông tin liên kết
               const allPetsData = await petService.getAllPets();
               setPets(allPetsData);
-              
-              // Hiển thị thông báo nếu không tìm thấy thông tin khách hàng liên kết
-              Alert.alert(
-                'Thông báo', 
-                'Tài khoản của bạn chưa được liên kết với thông tin chủ thú cưng. Vui lòng liên hệ nhân viên để được hỗ trợ.',
-                [{ text: 'Đã hiểu' }]
-              );
             }
           }
         } else {
@@ -162,17 +166,32 @@ export default function ThemBenhAnScreen() {
 
   const nextStep = () => {
     if (currentStep === 1) {
-      if (!selectedPet || !selectedCustomer) {
-        Alert.alert('Thông tin thiếu', 'Vui lòng chọn chủ thú cưng và thú cưng trước khi tiếp tục');
+      // Kiểm tra chủ thú cưng và thú cưng
+      if (!currentCustomer && !selectedCustomer) {
+        Alert.alert('Thông tin thiếu', 'Vui lòng chọn chủ thú cưng trước khi tiếp tục');
+        return;
+      }
+      
+      // Kiểm tra thú cưng đã chọn hoặc nhập thú cưng mới
+      if (!isCustomPet && !selectedPet) {
+        Alert.alert('Thông tin thiếu', 'Vui lòng chọn thú cưng từ danh sách hoặc thêm thú cưng mới');
+        return;
+      }
+      
+      // Kiểm tra thông tin thú cưng mới nếu đang trong chế độ thêm mới
+      if (isCustomPet && (!customPetName || !customPetSpecies)) {
+        Alert.alert('Thông tin thiếu', 'Vui lòng nhập đầy đủ tên và loài thú cưng');
         return;
       }
     }
+    
     if (currentStep === 2) {
       if (!service || !date) {
-        Alert.alert('Thông tin thiếu', 'Vui lòng chọn dịch vụ và ngày hẹn trước khi tiếp tục');
+        Alert.alert('Thông tin thiếu', 'Vui lòng chọn dịch vụ và ngày hẹn');
         return;
       }
     }
+    
     if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
     }
@@ -184,44 +203,149 @@ export default function ThemBenhAnScreen() {
     }
   };
 
+  // Vô hiệu hóa phần chuyển đổi isCustomPet khi chưa chọn khách hàng
+  const handleToggleCustomPet = (value: boolean) => {
+    // Nếu không có tài khoản đăng nhập và chưa chọn khách hàng, không cho phép chuyển sang thêm mới
+    if (value && !currentCustomer && !selectedCustomer) {
+      Alert.alert('Thông báo', 'Vui lòng chọn chủ thú cưng trước khi thêm thú cưng mới');
+      return;
+    }
+    setIsCustomPet(value);
+  };
+
+  // Sửa hàm handleSubmit, thêm xử lý thông báo khi chưa đăng nhập và chưa chọn chủ thú cưng
   const handleSubmit = async () => {
-    // Validation
-    if (!selectedPet || !selectedCustomer || !service) {
-      Alert.alert('Lỗi', 'Vui lòng điền đầy đủ thông tin bắt buộc: Chủ thú cưng, Thú cưng và Dịch vụ');
+    // Validation - kiểm tra chủ sở hữu
+    if (!selectedCustomer && !currentCustomer) {
+      Alert.alert('Lỗi', 'Vui lòng chọn chủ thú cưng trước khi tiếp tục');
       return;
     }
 
-    setIsSubmitting(true);
-    
+    // Validate pet information
+    if (isCustomPet) {
+      // Validation for custom pet - chỉ kiểm tra tên và loài
+      if (!customPetName || !customPetSpecies) {
+        Alert.alert('Lỗi', 'Vui lòng nhập tên và loài thú cưng');
+        return;
+      }
+    } else if (!selectedPet) {
+      // Validation for selected pet from list
+      Alert.alert('Lỗi', 'Vui lòng chọn thú cưng từ danh sách hoặc thêm thú cưng mới');
+      return;
+    }
+
+    if (!service || !date) {
+      Alert.alert('Lỗi', 'Vui lòng chọn dịch vụ và ngày hẹn');
+      return;
+    }
+
     try {
-      const medicalRecordData: MedicalRecord = {
-        pet_id: Number(selectedPet),
-        customer_id: Number(selectedCustomer),
+      setIsSubmitting(true);
+
+      let petId = selectedPet;
+
+      // Nếu người dùng nhập thú cưng tùy ý, cần tạo pet mới
+      if (isCustomPet) {
+        try {
+          // Luôn sử dụng ID của tài khoản đăng nhập nếu có
+          let customerId = parseInt(selectedCustomer);
+          
+          // Nếu có user đăng nhập và có thông tin current customer, luôn ưu tiên dùng
+          if (user && currentCustomer) {
+            customerId = currentCustomer.id;
+            console.log("Đang sử dụng ID của tài khoản đăng nhập:", customerId);
+          } else {
+            console.log("Đang sử dụng ID chủ thú cưng được chọn:", customerId);
+          }
+
+          if (!customerId) {
+            throw new Error('Không xác định được chủ thú cưng');
+          }
+
+          // Chỉ sử dụng tên và loài
+          const newPet = await petService.createPet({
+            name: customPetName,
+            species: customPetSpecies,
+            customer_id: customerId
+          });
+          petId = newPet.id.toString();
+          console.log('Created new pet:', newPet);
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : 'Lỗi không xác định';
+          Alert.alert('Lỗi khi tạo thú cưng mới', errorMessage);
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
+      // Lấy customer ID - ưu tiên sử dụng currentCustomer nếu đang đăng nhập
+      let customerId = parseInt(selectedCustomer);
+      if (user && currentCustomer) {
+        customerId = currentCustomer.id;
+      }
+
+      // Create appointment
+      const appointmentData = {
+        pet_id: parseInt(petId),
+        customer_id: customerId,
         date: date.toISOString(),
-        diagnosis: diagnosis || '', // Trường chẩn đoán có thể để trống
-        service,
-        clinic,
-        notes,
+        diagnosis: diagnosis,
+        service: service,
+        clinic: 'Phòng khám thú cưng PetCare',
+        notes: notes,
         status: 'pending'
       };
+
+      const result = await medicalRecordService.createMedicalRecord(appointmentData);
       
-      const response = await medicalRecordService.createMedicalRecord(medicalRecordData);
+      // Prepare display data for the modal
+      const createdRecord = {
+        ...result,
+        id: result.id
+      };
       
-      // Store the created appointment details
-      setCreatedAppointment(response);
+      setCreatedAppointment(createdRecord);
+
+      // Get pet and customer details for display
+      try {
+        const petDetails = await petService.getPetById(parseInt(petId));
+        setPetDetails(petDetails);
+      } catch (error) {
+        console.error('Error fetching pet details:', error);
+      }
       
-      // Get pet and customer details
-      const selectedPetObj = pets.find(p => p.id.toString() === selectedPet) || null;
-      const selectedCustomerObj = customers.find(c => c.id.toString() === selectedCustomer) || null;
-      
-      setPetDetails(selectedPetObj);
-      setCustomerDetails(selectedCustomerObj);
-      
-      // Show the modal with appointment details
+      try {
+        // Nếu là người dùng đăng nhập, ưu tiên dùng currentCustomer
+        if (user && currentCustomer) {
+          setCustomerDetails(currentCustomer);
+        } else {
+          // Ngược lại mới cần gọi API
+          const customerDetails = await customerService.getCustomerById(parseInt(selectedCustomer));
+          setCustomerDetails(customerDetails);
+        }
+      } catch (error) {
+        console.error('Error fetching customer details:', error);
+      }
+
+      // Show success modal
       setIsModalVisible(true);
-    } catch (error: unknown) {
+      
+      // Reset form
+      setSelectedPet('');
+      setDiagnosis('');
+      setService('');
+      setSelectedServiceId('');
+      setNotes('');
+      setCustomPetName('');
+      setCustomPetSpecies('');
+      setIsCustomPet(false);
+      
+      // Reset step
+      setCurrentStep(1);
+      
+    } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      Alert.alert('Lỗi', 'Không thể đặt lịch khám: ' + errorMessage);
+      Alert.alert('Lỗi', `Không thể đặt lịch hẹn: ${errorMessage}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -317,39 +441,93 @@ export default function ThemBenhAnScreen() {
                 <Text style={styles.label}>
                   <MaterialCommunityIcons name="dog" size={18} color="#1976D2" /> Thú cưng:
                 </Text>
-                <View style={styles.pickerContainer}>
-                  <Picker
-                    style={styles.picker}
-                    selectedValue={selectedPet}
-                    onValueChange={(itemValue: string) => setSelectedPet(itemValue)}
-                  >
-                    <Picker.Item label="-- Chọn thú cưng --" value="" />
-                    {pets.map(pet => (
-                      <Picker.Item 
-                        key={pet.id} 
-                        label={`${pet.name} (${pet.species})`} 
-                        value={pet.id.toString()} 
-                      />
-                    ))}
-                  </Picker>
-                </View>
                 
-                {pets.length === 0 && currentCustomer && (
-                  <View style={styles.noPetsContainer}>
-                    <Text style={styles.noPetsMessage}>
-                      Bạn chưa có thú cưng nào. Vui lòng đăng ký thú cưng trước khi đặt lịch khám.
+                {/* Switch between existing pets or custom pet */}
+                <View style={styles.petSelectionToggle}>
+                  <TouchableOpacity 
+                    style={[
+                      styles.toggleButton, 
+                      !isCustomPet && styles.toggleButtonActive
+                    ]}
+                    onPress={() => setIsCustomPet(false)}
+                  >
+                    <Text style={!isCustomPet ? styles.toggleTextActive : styles.toggleText}>
+                      Chọn từ danh sách
                     </Text>
-                    <TouchableOpacity 
-                      style={styles.addPetButton}
-                      onPress={() => {
-                        // Chuyển hướng đến trang đăng ký thú cưng nếu có
-                        if (typeof router.push === 'function') {
-                          router.push('/home/tai_khoan'); // Đường dẫn an toàn đến trang cá nhân
-                        }
-                      }}
-                    >
-                      <Text style={styles.addPetButtonText}>Thêm thú cưng</Text>
-                    </TouchableOpacity>
+                  </TouchableOpacity>
+                  <TouchableOpacity 
+                    style={[
+                      styles.toggleButton, 
+                      isCustomPet && styles.toggleButtonActive
+                    ]}
+                    onPress={() => handleToggleCustomPet(true)}
+                  >
+                    <Text style={isCustomPet ? styles.toggleTextActive : styles.toggleText}>
+                      Thêm thú cưng mới
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+
+                {isCustomPet ? (
+                  // Form nhập thú cưng mới - chỉ tên và loài
+                  <View style={styles.customPetForm}>
+                    {/* Hiển thị thông tin chủ thú cưng khi thêm mới */}
+                    {(currentCustomer || selectedCustomer) && (
+                      <View style={styles.selectedOwnerContainer}>
+                        <Text style={styles.selectedOwnerLabel}>Chủ thú cưng:</Text>
+                        <Text style={styles.selectedOwnerValue}>
+                          {currentCustomer ? currentCustomer.name : 
+                            customers.find(c => c.id.toString() === selectedCustomer)?.name}
+                        </Text>
+                      </View>
+                    )}
+                    
+                    <TextInput
+                      style={styles.input}
+                      value={customPetName}
+                      onChangeText={setCustomPetName}
+                      placeholder="Nhập tên thú cưng (*)"
+                    />
+                    <TextInput
+                      style={[styles.input, { marginTop: 10 }]}
+                      value={customPetSpecies}
+                      onChangeText={setCustomPetSpecies}
+                      placeholder="Nhập loài thú cưng (chó, mèo, chim,...) (*)"
+                    />
+                  </View>
+                ) : (
+                  // Dropdown chọn thú cưng từ danh sách
+                  <View>
+                    <View style={styles.pickerContainer}>
+                      <Picker
+                        style={styles.picker}
+                        selectedValue={selectedPet}
+                        onValueChange={(itemValue: string) => setSelectedPet(itemValue)}
+                      >
+                        <Picker.Item label="-- Chọn thú cưng --" value="" />
+                        {pets.map(pet => (
+                          <Picker.Item 
+                            key={pet.id} 
+                            label={`${pet.name} (${pet.species})`} 
+                            value={pet.id.toString()} 
+                          />
+                        ))}
+                      </Picker>
+                    </View>
+                    
+                    {pets.length === 0 && currentCustomer && (
+                      <View style={styles.noPetsContainer}>
+                        <Text style={styles.noPetsMessage}>
+                          Bạn chưa có thú cưng nào trong danh sách. Vui lòng thêm thông tin thú cưng.
+                        </Text>
+                        <TouchableOpacity 
+                          style={styles.addPetButton}
+                          onPress={() => setIsCustomPet(true)}
+                        >
+                          <Text style={styles.addPetButtonText}>Thêm thú cưng mới</Text>
+                        </TouchableOpacity>
+                      </View>
+                    )}
                   </View>
                 )}
               </View>
@@ -512,7 +690,9 @@ export default function ThemBenhAnScreen() {
               <View style={styles.summaryRow}>
                 <Text style={styles.summaryLabel}>Chủ thú:</Text>
                 <Text style={styles.summaryValue}>
-                  {selectedCustomer ? customers.find(c => c.id.toString() === selectedCustomer)?.name || '' : ''}
+                  {user && currentCustomer 
+                    ? currentCustomer.name
+                    : (selectedCustomer ? customers.find(c => c.id.toString() === selectedCustomer)?.name || '' : '')}
                 </Text>
               </View>
               
@@ -561,13 +741,11 @@ export default function ThemBenhAnScreen() {
               <Text style={styles.modalTitle}>Chi tiết lịch hẹn</Text>
               
               <View style={styles.appointmentDetail}>
-                <Text style={styles.appointmentDetailLabel}>Mã lịch hẹn:</Text>
-                <Text style={styles.appointmentDetailValue}>#{createdAppointment.id}</Text>
-              </View>
-              
-              <View style={styles.appointmentDetail}>
                 <Text style={styles.appointmentDetailLabel}>Thú cưng:</Text>
-                <Text style={styles.appointmentDetailValue}>{petDetails?.name}</Text>
+                <Text style={styles.appointmentDetailValue}>
+                  {petDetails?.name} ({petDetails?.species})
+                  {petDetails?.age ? `, ${petDetails.age} tuổi` : ''}
+                </Text>
               </View>
               
               <View style={styles.appointmentDetail}>
@@ -584,6 +762,13 @@ export default function ThemBenhAnScreen() {
                 <Text style={styles.appointmentDetailLabel}>Ngày hẹn:</Text>
                 <Text style={styles.appointmentDetailValue}>{date.toLocaleDateString('vi-VN')}</Text>
               </View>
+              
+              {diagnosis && (
+                <View style={styles.appointmentDetail}>
+                  <Text style={styles.appointmentDetailLabel}>Triệu chứng:</Text>
+                  <Text style={styles.appointmentDetailValue}>{diagnosis}</Text>
+                </View>
+              )}
               
               <View style={styles.appointmentDetail}>
                 <Text style={styles.appointmentDetailLabel}>Trạng thái:</Text>

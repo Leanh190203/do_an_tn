@@ -519,3 +519,49 @@ def auto_update_appointment_status(current_user_id):
         db.session.rollback()
         logger.error(f"Error auto-updating appointment status: {str(e)}")
         return jsonify({'message': f'Lỗi khi tự động cập nhật trạng thái lịch hẹn: {str(e)}'}), 500
+
+@appointment_bp.route('/customer/<int:customer_id>', methods=['GET'])
+@token_required
+def get_appointments_by_customer(current_user_id, customer_id):
+    try:
+        # Kiểm tra quyền truy cập
+        customer = Customer.query.filter_by(id=customer_id).first()
+        if not customer or customer.user_id != current_user_id:
+            return jsonify({'message': 'Bạn không có quyền xem lịch hẹn của khách hàng này'}), 403
+        
+        # Lấy danh sách lịch hẹn của khách hàng
+        appointments = Appointment.query.filter_by(customer_id=customer_id).all()
+        
+        # Format kết quả trả về
+        result = []
+        for appointment in appointments:
+            pet = Pet.query.get(appointment.pet_id)
+            customer = Customer.query.get(appointment.customer_id)
+            
+            appointment_data = appointment.to_dict()
+            
+            # Thêm thông tin pet và customer
+            if pet:
+                appointment_data['pet'] = pet.to_dict()
+            else:
+                # Dự phòng nếu không tìm thấy pet
+                appointment_data['petName'] = "Không tìm thấy thông tin"
+                
+            if customer:
+                appointment_data['customer'] = customer.to_dict()
+            else:
+                # Dự phòng nếu không tìm thấy customer
+                appointment_data['customerName'] = "Không tìm thấy thông tin"
+            
+            # Format ngày tháng đẹp hơn
+            appointment_date = datetime.strptime(appointment.appointment_date, '%Y-%m-%d %H:%M:%S')
+            appointment_data['formatted_date'] = appointment_date.strftime('%d/%m/%Y')
+            appointment_data['formatted_time'] = appointment_date.strftime('%H:%M')
+            
+            result.append(appointment_data)
+            
+        return jsonify(result)
+        
+    except Exception as e:
+        logger.error(f"Error getting appointments for customer {customer_id}: {str(e)}")
+        return jsonify({'message': f'Lỗi khi tải danh sách lịch hẹn: {str(e)}'}), 500

@@ -232,7 +232,23 @@ export const styles = StyleSheet.create({
   viewDetailsText: {
     fontSize: 14,
     color: '#1976D2',
-    marginRight: 4,
+    fontWeight: '500',
+  },
+  viewPetButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#E3F2FD',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+    alignSelf: 'flex-start',
+    marginTop: 10,
+  },
+  viewPetButtonText: {
+    fontSize: 12,
+    color: '#1976D2',
+    fontWeight: '500',
+    marginLeft: 4,
   },
   
   // Floating action button
