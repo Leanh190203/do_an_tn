@@ -10,10 +10,11 @@ export interface MedicalRecord {
   pet_id: number;
   customer_id: number;
   date: string;
-  diagnosis: string;
+  diagnosis?: string;
   service: string;
   clinic: string;
   notes?: string;
+  status: string;
 }
 
 const medicalRecordService = {
@@ -21,13 +22,16 @@ const medicalRecordService = {
   createMedicalRecord: async (data: MedicalRecord) => {
     try {
       const token = global.authToken;
-      // For now, we're using the appointment endpoint as there's no dedicated medical record endpoint
+      // Use the dedicated fields for diagnosis and clinic
       const response = await api.post('/appointments', {
         pet_id: data.pet_id,
         customer_id: data.customer_id,
         appointment_date: data.date,
         service: data.service,
-        notes: `Chẩn đoán: ${data.diagnosis}\nPhòng khám: ${data.clinic}\n${data.notes || ''}`,
+        notes: data.notes || '',
+        diagnosis: data.diagnosis || '',
+        clinic: data.clinic || '',
+        status: data.status
       }, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -48,7 +52,7 @@ const medicalRecordService = {
     }
   },
   
-  // Get all medical records (using appointments for now)
+  // Get all medical records
   getAllMedicalRecords: async () => {
     try {
       const token = global.authToken;
@@ -58,28 +62,26 @@ const medicalRecordService = {
         }
       });
       
-      // Transform appointment data to medical record format
-      const records = response.data.map((appointment: any) => {
-        // Try to extract diagnosis and clinic from notes field if available
-        const notes = appointment.notes || '';
-        const diagnosisMatch = notes.match(/Chẩn đoán: (.+?)(?:\n|$)/);
-        const clinicMatch = notes.match(/Phòng khám: (.+?)(?:\n|$)/);
-        
-        return {
-          id: appointment.id,
-          pet_id: appointment.pet_id,
-          petName: appointment.petName,
-          customer_id: appointment.customer_id,
-          owner: appointment.customerName,
-          date: appointment.appointment_date,
-          diagnosis: diagnosisMatch ? diagnosisMatch[1] : 'Không có',
-          service: appointment.service,
-          clinic: clinicMatch ? clinicMatch[1] : 'Không có',
-          notes: notes
-        };
-      });
-      
-      return records;
+      // Map appointments to medical records format with detailed information
+      return response.data.map((appointment: any) => ({
+        id: appointment.id,
+        pet_id: appointment.pet_id,
+        customer_id: appointment.customer_id,
+        date: appointment.appointment_date,
+        service: appointment.service,
+        notes: appointment.notes || '',
+        diagnosis: appointment.diagnosis || '',
+        clinic: appointment.clinic || '',
+        status: appointment.status,
+        // Giữ lại thông tin thú cưng và chủ sở hữu
+        pet: appointment.pet,
+        customer: appointment.customer,
+        petName: appointment.petName, // Dự phòng nếu không có object pet
+        customerName: appointment.customerName, // Dự phòng nếu không có object customer
+        // Thêm thông tin khác nếu có
+        formatted_date: appointment.formatted_date,
+        formatted_time: appointment.formatted_time
+      }));
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
@@ -94,8 +96,8 @@ const medicalRecordService = {
     }
   },
   
-  // Get medical record by ID
-  getMedicalRecordById: async (id: number) => {
+  // Get a specific medical record by ID
+  getMedicalRecord: async (id: number) => {
     try {
       const token = global.authToken;
       const response = await api.get(`/appointments/${id}`, {
@@ -104,39 +106,42 @@ const medicalRecordService = {
         }
       });
       
-      // Transform to medical record format
       const appointment = response.data;
-      const notes = appointment.notes || '';
-      const diagnosisMatch = notes.match(/Chẩn đoán: (.+?)(?:\n|$)/);
-      const clinicMatch = notes.match(/Phòng khám: (.+?)(?:\n|$)/);
-      
+      // Convert appointment to medical record format with detailed information
       return {
         id: appointment.id,
         pet_id: appointment.pet_id,
-        petName: appointment.petName,
         customer_id: appointment.customer_id,
-        owner: appointment.customerName,
         date: appointment.appointment_date,
-        diagnosis: diagnosisMatch ? diagnosisMatch[1] : 'Không có',
         service: appointment.service,
-        clinic: clinicMatch ? clinicMatch[1] : 'Không có',
-        notes: notes
+        notes: appointment.notes || '',
+        diagnosis: appointment.diagnosis || '',
+        clinic: appointment.clinic || '',
+        status: appointment.status,
+        // Giữ lại thông tin thú cưng và chủ sở hữu
+        pet: appointment.pet,
+        customer: appointment.customer,
+        petName: appointment.petName, // Dự phòng nếu không có object pet
+        customerName: appointment.customerName, // Dự phòng nếu không có object customer
+        // Thêm thông tin khác nếu có
+        formatted_date: appointment.formatted_date,
+        formatted_time: appointment.formatted_time
       };
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
         if (axiosError.response) {
-          const errorMessage = axiosError.response.data?.message || 'Failed to fetch medical record details';
+          const errorMessage = axiosError.response.data?.message || 'Failed to fetch medical record';
           throw new Error(errorMessage);
         } else if (axiosError.request) {
           throw new Error('No response received from server. Please check your network connection.');
         }
       }
-      throw new Error('An unknown error occurred while fetching medical record details.');
+      throw new Error('An unknown error occurred while fetching medical record.');
     }
   },
   
-  // Update medical record
+  // Update a medical record
   updateMedicalRecord: async (id: number, data: MedicalRecord) => {
     try {
       const token = global.authToken;
@@ -145,7 +150,10 @@ const medicalRecordService = {
         customer_id: data.customer_id,
         appointment_date: data.date,
         service: data.service,
-        notes: `Chẩn đoán: ${data.diagnosis}\nPhòng khám: ${data.clinic}\n${data.notes || ''}`,
+        notes: data.notes || '',
+        diagnosis: data.diagnosis || '',
+        clinic: data.clinic || '',
+        status: data.status
       }, {
         headers: {
           Authorization: `Bearer ${token}`

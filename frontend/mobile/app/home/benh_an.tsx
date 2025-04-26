@@ -20,15 +20,28 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 interface MedicalRecordItem {
   id: number;
-  petName: string;
-  owner: string;
+  pet_id: number;
+  customer_id: number;
   date: string;
   diagnosis: string;
-  phone?: string;
   service: string;
   clinic: string;
   notes: string;
-  pet_id: number;
+  status: string;
+  // Thông tin đầy đủ
+  pet?: {
+    id: number;
+    name: string;
+    species: string;
+  };
+  customer?: {
+    id: number;
+    name: string;
+    phone: string;
+  };
+  // Thông tin dự phòng
+  petName?: string;
+  customerName?: string;
 }
 
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
@@ -83,11 +96,23 @@ export default function MedicalRecordsScreen() {
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(record => 
-        record.petName?.toLowerCase().includes(query) ||
-        record.owner?.toLowerCase().includes(query) ||
-        record.diagnosis?.toLowerCase().includes(query) ||
-        record.service?.toLowerCase().includes(query)
+        (record.pet?.name?.toLowerCase().includes(query)) ||
+        (record.petName?.toLowerCase().includes(query)) ||
+        (record.customer?.name?.toLowerCase().includes(query)) ||
+        (record.customerName?.toLowerCase().includes(query)) ||
+        (record.diagnosis?.toLowerCase().includes(query)) ||
+        (record.service?.toLowerCase().includes(query))
       );
+    }
+    
+    // Filter by status
+    if (selectedStatusFilter !== 'all') {
+      const now = new Date();
+      if (selectedStatusFilter === 'appointments') {
+        filtered = filtered.filter(record => new Date(record.date) > now);
+      } else if (selectedStatusFilter === 'completed') {
+        filtered = filtered.filter(record => new Date(record.date) <= now);
+      }
     }
     
     setFilteredRecords(filtered);
@@ -254,8 +279,12 @@ export default function MedicalRecordsScreen() {
                 >
                   <View style={styles.cardHeader}>
                     <View style={styles.petInfoContainer}>
-                      <Text style={styles.petName}>{item.petName}</Text>
-                      <Text style={styles.petOwner}>{item.owner}</Text>
+                      <Text style={styles.petName}>
+                        {item.pet?.name || item.petName || 'Không có tên'}
+                      </Text>
+                      <Text style={styles.petOwner}>
+                        {item.customer?.name || item.customerName || 'Không có thông tin'}
+                      </Text>
                     </View>
                     <View style={[styles.statusBadge, { backgroundColor: statusColor }]}>
                       <Text style={styles.statusText}>{statusText}</Text>

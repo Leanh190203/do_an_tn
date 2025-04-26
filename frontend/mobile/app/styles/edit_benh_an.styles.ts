@@ -55,6 +55,12 @@ export const styles = StyleSheet.create({
     marginBottom: 8,
     color: '#0D47A1',
   },
+  optionalText: {
+    fontSize: 14,
+    fontWeight: 'normal',
+    color: '#757575',
+    fontStyle: 'italic',
+  },
   input: {
     backgroundColor: '#f5f5f5',
     borderRadius: 8,

@@ -54,6 +54,34 @@ export const customerService = {
     }
   },
   
+  // Get customer by user ID - To link user accounts with customer profiles
+  getCustomerByUserId: async (userId: number) => {
+    try {
+      const token = global.authToken;
+      const response = await api.get(`/customers/user/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+        if (axiosError.response) {
+          // If customer not found for this user ID, return null instead of throwing error
+          if (axiosError.response.status === 404) {
+            return null;
+          }
+          const errorMessage = axiosError.response.data?.message || 'Failed to fetch customer by user ID';
+          throw new Error(errorMessage);
+        } else if (axiosError.request) {
+          throw new Error('No response received from server. Please check your network connection.');
+        }
+      }
+      throw new Error('An unknown error occurred while fetching customer by user ID.');
+    }
+  },
+  
   // Create new customer
   createCustomer: async (customerData: any) => {
     try {

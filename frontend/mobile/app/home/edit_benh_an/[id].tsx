@@ -47,6 +47,7 @@ export default function EditMedicalRecordScreen() {
   const [clinic, setClinic] = useState('');
   const [notes, setNotes] = useState('');
   const [date, setDate] = useState(new Date());
+  const [status, setStatus] = useState('pending');
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   // Load data
@@ -64,7 +65,7 @@ export default function EditMedicalRecordScreen() {
         const [petsData, customersData, recordData] = await Promise.all([
           petService.getAllPets(),
           customerService.getAllCustomers(),
-          medicalRecordService.getMedicalRecordById(recordId)
+          medicalRecordService.getMedicalRecord(recordId)
         ]);
         
         setPets(petsData);
@@ -78,6 +79,7 @@ export default function EditMedicalRecordScreen() {
         setClinic(recordData.clinic);
         setNotes(recordData.notes);
         setDate(new Date(recordData.date));
+        setStatus(recordData.status || 'pending');
       } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
         Alert.alert('Lỗi', 'Không thể tải dữ liệu: ' + errorMessage);
@@ -98,7 +100,7 @@ export default function EditMedicalRecordScreen() {
 
   const handleSubmit = async () => {
     // Validation
-    if (!selectedPet || !selectedCustomer || !diagnosis || !service || !clinic) {
+    if (!selectedPet || !selectedCustomer || !service || !clinic) {
       Alert.alert('Lỗi', 'Vui lòng điền đầy đủ thông tin bắt buộc');
       return;
     }
@@ -110,10 +112,11 @@ export default function EditMedicalRecordScreen() {
         pet_id: Number(selectedPet),
         customer_id: Number(selectedCustomer),
         date: date.toISOString(),
-        diagnosis,
+        diagnosis: diagnosis || '',
         service,
         clinic,
-        notes
+        notes,
+        status
       };
       
       await medicalRecordService.updateMedicalRecord(recordId, medicalRecordData);
@@ -212,12 +215,12 @@ export default function EditMedicalRecordScreen() {
         </View>
         
         <View style={styles.formGroup}>
-          <Text style={styles.label}>Chẩn đoán:</Text>
+          <Text style={styles.label}>Chẩn đoán: <Text style={styles.optionalText}>(không bắt buộc)</Text></Text>
           <TextInput
             style={styles.input}
             value={diagnosis}
             onChangeText={setDiagnosis}
-            placeholder="Nhập chẩn đoán"
+            placeholder="Nhập chẩn đoán (nếu có)"
           />
         </View>
         

@@ -11,6 +11,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import medicalRecordService from '../../services/medicalRecordService';
 import { styles } from '../../styles/benh_an_detail.styles';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function MedicalRecordDetailScreen() {
   const { id } = useLocalSearchParams();
@@ -28,7 +29,7 @@ export default function MedicalRecordDetailScreen() {
       }
 
       try {
-        const recordData = await medicalRecordService.getMedicalRecordById(recordId);
+        const recordData = await medicalRecordService.getMedicalRecord(recordId);
         setRecord(recordData);
       } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -116,13 +117,27 @@ export default function MedicalRecordDetailScreen() {
           <View style={styles.row}>
             <Ionicons name="paw" size={20} color="#1976D2" />
             <Text style={styles.label}>Tên:</Text>
-            <Text style={styles.value}>{record.petName}</Text>
+            <Text style={styles.value}>{record.pet?.name || record.petName || 'Không có thông tin'}</Text>
           </View>
           <View style={styles.row}>
             <Ionicons name="person" size={20} color="#1976D2" />
             <Text style={styles.label}>Chủ:</Text>
-            <Text style={styles.value}>{record.owner}</Text>
+            <Text style={styles.value}>{record.customer?.name || record.customerName || 'Không có thông tin'}</Text>
           </View>
+          {record.pet?.species && (
+            <View style={styles.row}>
+              <MaterialCommunityIcons name="paw" size={20} color="#1976D2" />
+              <Text style={styles.label}>Loài:</Text>
+              <Text style={styles.value}>{record.pet.species}</Text>
+            </View>
+          )}
+          {record.customer?.phone && (
+            <View style={styles.row}>
+              <Ionicons name="call" size={20} color="#1976D2" />
+              <Text style={styles.label}>Liên hệ:</Text>
+              <Text style={styles.value}>{record.customer.phone}</Text>
+            </View>
+          )}
         </View>
 
         <View style={styles.divider} />
