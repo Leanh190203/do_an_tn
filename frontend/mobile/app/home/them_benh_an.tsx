@@ -582,35 +582,45 @@ export default function ThemBenhAnScreen() {
               
               <View style={styles.formGroup}>
                 <Text style={styles.label}>
-                  <MaterialCommunityIcons name="hospital" size={18} color="#1976D2" /> Dịch vụ cần sử dụng:
+                  <Ionicons name="medical" size={18} color="#1976D2" /> Chẩn đoán:
                 </Text>
 
                 <View style={styles.serviceOptionsContainer}>
-                  {serviceOptions.map((item) => (
+                  {serviceOptions.map((option) => (
                     <TouchableOpacity
-                      key={item.id}
+                      key={option.id}
                       style={[
                         styles.serviceOption,
-                        selectedServiceId === item.id && styles.serviceOptionSelected
+                        selectedServiceId === option.id && styles.serviceOptionSelected
                       ]}
-                      onPress={() => selectService(item.id, item.name)}
+                      onPress={() => selectService(option.id, option.name)}
                     >
                       <MaterialCommunityIcons 
-                        name={item.icon as any} 
+                        name={option.icon as any} 
                         size={24} 
-                        color={selectedServiceId === item.id ? "#FFF" : "#1976D2"} 
+                        color={selectedServiceId === option.id ? '#1976D2' : '#666'} 
                       />
-                      <Text 
-                        style={[
-                          styles.serviceOptionText,
-                          selectedServiceId === item.id && styles.serviceOptionTextSelected
-                        ]}
-                      >
-                        {item.name}
+                      <Text style={[
+                        styles.serviceOptionText,
+                        selectedServiceId === option.id && styles.serviceOptionTextSelected
+                      ]}>
+                        {option.name}
                       </Text>
                     </TouchableOpacity>
                   ))}
                 </View>
+              </View>
+              
+              <View style={styles.formGroup}>
+                <Text style={styles.label}>
+                  <MaterialCommunityIcons name="hospital" size={18} color="#1976D2" /> Dịch vụ:
+                </Text>
+                <TextInput
+                  style={styles.input}
+                  value={diagnosis}
+                  onChangeText={setDiagnosis}
+                  placeholder="Nhập dịch vụ cần sử dụng"
+                />
               </View>
             </View>
           </>
@@ -883,4 +893,4 @@ export default function ThemBenhAnScreen() {
       {renderAppointmentConfirmationModal()}
     </KeyboardAvoidingView>
   );
-} 
+}

@@ -356,10 +356,12 @@ export default function MedicalRecordsScreen() {
                   <View style={styles.cardContent}>
                     <View style={styles.cardRow}>
                       <View style={styles.cardIconContainer}>
-                        <Ionicons name="calendar" size={20} color="#1976D2" />
+                        <Ionicons name="medical" size={20} color="#1976D2" />
                       </View>
-                      <Text style={styles.cardLabel}>Ngày:</Text>
-                      <Text style={styles.cardValue}>{formatDate(item.date)}</Text>
+                      <Text style={styles.cardLabel}>Chẩn đoán:</Text>
+                      <Text style={[styles.cardValue, styles.diagnosisText]} numberOfLines={1}>
+                        {item.service}
+                      </Text>
                     </View>
                     
                     <View style={styles.cardRow}>
@@ -367,20 +369,8 @@ export default function MedicalRecordsScreen() {
                         <MaterialCommunityIcons name="hospital" size={20} color="#1976D2" />
                       </View>
                       <Text style={styles.cardLabel}>Dịch vụ:</Text>
-                      <Text style={styles.cardValue}>{item.service}</Text>
+                      <Text style={styles.cardValue}>{item.diagnosis || 'Chưa có chẩn đoán'}</Text>
                     </View>
-                    
-                    {item.diagnosis && (
-                      <View style={styles.cardRow}>
-                        <View style={styles.cardIconContainer}>
-                          <Ionicons name="medical" size={20} color="#1976D2" />
-                        </View>
-                        <Text style={styles.cardLabel}>Vấn đề:</Text>
-                        <Text style={[styles.cardValue, styles.diagnosisText]} numberOfLines={1}>
-                          {item.diagnosis}
-                        </Text>
-                      </View>
-                    )}
 
                     {item.pet_id && currentCustomer && item.customer_id === currentCustomer.id && (
                       <TouchableOpacity 

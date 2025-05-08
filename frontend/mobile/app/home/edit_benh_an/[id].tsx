@@ -215,12 +215,12 @@ export default function EditMedicalRecordScreen() {
         </View>
         
         <View style={styles.formGroup}>
-          <Text style={styles.label}>Chẩn đoán: <Text style={styles.optionalText}>(không bắt buộc)</Text></Text>
+          <Text style={styles.label}>Chẩn đoán:</Text>
           <TextInput
             style={styles.input}
-            value={diagnosis}
-            onChangeText={setDiagnosis}
-            placeholder="Nhập chẩn đoán (nếu có)"
+            value={service}
+            onChangeText={setService}
+            placeholder="Nhập chẩn đoán"
           />
         </View>
         
@@ -228,8 +228,8 @@ export default function EditMedicalRecordScreen() {
           <Text style={styles.label}>Dịch vụ:</Text>
           <TextInput
             style={styles.input}
-            value={service}
-            onChangeText={setService}
+            value={diagnosis}
+            onChangeText={setDiagnosis}
             placeholder="Nhập dịch vụ đã sử dụng"
           />
         </View>
@@ -283,4 +283,4 @@ export default function EditMedicalRecordScreen() {
       </View>
     </ScrollView>
   );
-} 
+}

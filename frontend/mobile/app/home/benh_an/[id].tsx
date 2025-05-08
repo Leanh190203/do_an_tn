@@ -218,13 +218,13 @@ export default function MedicalRecordDetailScreen() {
             <Text style={styles.value}>{formatDate(record.date)}</Text>
           </View>
           <View style={styles.row}>
-            <Ionicons name="medkit" size={20} color="#1976D2" />
-            <Text style={styles.label}>Dịch vụ:</Text>
+            <Ionicons name="medical" size={20} color="#1976D2" />
+            <Text style={styles.label}>Chẩn đoán:</Text>
             <Text style={styles.value}>{record.service}</Text>
           </View>
           <View style={styles.row}>
-            <Ionicons name="medical" size={20} color="#1976D2" />
-            <Text style={styles.label}>Chẩn đoán:</Text>
+            <Ionicons name="medkit" size={20} color="#1976D2" />
+            <Text style={styles.label}>Dịch vụ:</Text>
             <Text style={styles.value}>{record.diagnosis || 'Chưa có chẩn đoán'}</Text>
           </View>
           <View style={styles.row}>
@@ -291,4 +291,4 @@ export default function MedicalRecordDetailScreen() {
       )}
     </ScrollView>
   );
-} 
+}

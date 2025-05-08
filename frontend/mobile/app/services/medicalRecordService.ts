@@ -22,14 +22,13 @@ const medicalRecordService = {
   createMedicalRecord: async (data: MedicalRecord) => {
     try {
       const token = global.authToken;
-      // Use the dedicated fields for diagnosis and clinic
       const response = await api.post('/appointments', {
         pet_id: data.pet_id,
         customer_id: data.customer_id,
         appointment_date: data.date,
-        service: data.service,
+        service: data.diagnosis, // Đảo ngược data.diagnosis và data.service
         notes: data.notes || '',
-        diagnosis: data.diagnosis || '',
+        diagnosis: data.service, // Đảo ngược data.diagnosis và data.service
         clinic: data.clinic || '',
         status: data.status
       }, {
@@ -193,9 +192,9 @@ const medicalRecordService = {
         pet_id: data.pet_id,
         customer_id: data.customer_id,
         appointment_date: data.date,
-        service: data.service,
+        service: data.diagnosis, // Đảo ngược data.diagnosis và data.service
         notes: data.notes || '',
-        diagnosis: data.diagnosis || '',
+        diagnosis: data.service, // Đảo ngược data.diagnosis và data.service
         clinic: data.clinic || '',
         status: data.status
       }, {
@@ -243,4 +242,4 @@ const medicalRecordService = {
   }
 };
 
-export default medicalRecordService; 
+export default medicalRecordService;
