@@ -7,7 +7,8 @@ import {
   CardContent,
   CardHeader,
   Divider,
-  CircularProgress
+  CircularProgress,
+  Fade
 } from '@mui/material';
 import {
   BarChart,
@@ -26,6 +27,7 @@ import {
 } from 'recharts';
 import reportService from '../services/reportService';
 import { toast } from 'react-toastify';
+import '../styles/Reports.css';
 
 const Reports = () => {
   const [loading, setLoading] = useState(true);
@@ -52,7 +54,15 @@ const Reports = () => {
     fetchReportData();
   }, []);
 
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#AA00FF'];
+  const COLORS = ['#3f51b5', '#00bcd4', '#4caf50', '#f44336', '#ff9800', '#9c27b0'];
+  const GRADIENTS = [
+    ['#3f51b5', '#5c6bc0'],
+    ['#00bcd4', '#4dd0e1'],
+    ['#4caf50', '#66bb6a'],
+    ['#f44336', '#ef5350'],
+    ['#ff9800', '#ffa726'],
+    ['#9c27b0', '#ba68c8']
+  ];
 
   const getStatusName = (status) => {
     const statusMap = {
@@ -64,53 +74,90 @@ const Reports = () => {
     return statusMap[status] || status;
   };
 
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (!active || !payload || !payload.length) return null;
+    
+    return (
+      <div style={{
+        backgroundColor: 'rgba(255, 255, 255, 0.98)',
+        padding: '12px 16px',
+        border: 'none',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+        borderRadius: '12px',
+      }}>
+        <p style={{ margin: 0, fontWeight: 500 }}>{`${label}: ${payload[0].value}`}</p>
+      </div>
+    );
+  };
+
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <CircularProgress />
+        <CircularProgress size={60} thickness={4} />
       </Box>
     );
   }
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h4" sx={{ color: '#1a237e', mb: 3 }}>
-        Báo cáo & Thống kê
-      </Typography>
+    <Fade in timeout={500}>
+      <Box className="reports-container">
+        <Typography variant="h4" className="reports-title animate-fade-in">
+          Báo cáo & Thống kê
+        </Typography>
 
-      <Grid container spacing={3}>
-        {/* Monthly Visits Chart */}
-        <Grid item xs={12} md={8}>
-          <Card>
-            <CardHeader title="Lượt khám theo tháng" />
-            <Divider />
-            <CardContent>
-              <Box sx={{ width: '100%', height: 300 }}>
+        <Grid container spacing={3}>
+          {/* Monthly Visits Chart */}
+          <Grid item xs={12} md={8} className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
+            <Card className="report-card">
+              <CardHeader
+                title="Lượt khám theo tháng"
+              />
+              <CardContent className="report-chart-container">
                 <ResponsiveContainer>
                   <LineChart
                     data={reportData.monthlyData}
-                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
                   >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Line type="monotone" dataKey="visits" stroke="#1a237e" activeDot={{ r: 8 }} name="Số lượt khám" />
+                    <defs>
+                      <linearGradient id="visitColor" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#3f51b5" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#3f51b5" stopOpacity={0.1}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" />
+                    <XAxis 
+                      dataKey="month" 
+                      stroke="#666"
+                      tick={{ fill: '#666', fontSize: 12 }}
+                    />
+                    <YAxis 
+                      stroke="#666"
+                      tick={{ fill: '#666', fontSize: 12 }}
+                    />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Line
+                      type="monotone"
+                      dataKey="visits"
+                      stroke="#3f51b5"
+                      strokeWidth={3}
+                      dot={{ r: 6, fill: "#3f51b5", strokeWidth: 2 }}
+                      activeDot={{ r: 8, strokeWidth: 2 }}
+                      name="Số lượt khám"
+                      fill="url(#visitColor)"
+                    />
                   </LineChart>
                 </ResponsiveContainer>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
 
-        {/* Service Distribution Chart */}
-        <Grid item xs={12} md={4}>
-          <Card>
-            <CardHeader title="Phân bổ dịch vụ" />
-            <Divider />
-            <CardContent>
-              <Box sx={{ width: '100%', height: 300 }}>
+          {/* Service Distribution Chart */}
+          <Grid item xs={12} md={4} className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
+            <Card className="report-card">
+              <CardHeader
+                title="Phân bổ dịch vụ"
+              />
+              <CardContent className="report-chart-container">
                 <ResponsiveContainer>
                   <PieChart>
                     <Pie
@@ -118,60 +165,112 @@ const Reports = () => {
                       cx="50%"
                       cy="50%"
                       innerRadius={60}
-                      outerRadius={80}
-                      fill="#8884d8"
+                      outerRadius={90}
                       paddingAngle={5}
                       dataKey="value"
                       nameKey="name"
-                      label={({name, percent}) => `${name}: ${(percent * 100).toFixed(0)}%`}
                     >
                       {reportData.serviceData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        <Cell 
+                          key={`cell-${index}`} 
+                          fill={COLORS[index % COLORS.length]}
+                          stroke="none"
+                        />
                       ))}
                     </Pie>
                     <Tooltip />
-                    <Legend />
                   </PieChart>
                 </ResponsiveContainer>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
+                <div className="report-legend">
+                  {reportData.serviceData.map((entry, index) => (
+                    <div key={`legend-${index}`} className="legend-item">
+                      <div
+                        className="legend-color"
+                        style={{ 
+                          background: `linear-gradient(135deg, ${GRADIENTS[index % GRADIENTS.length][0]}, ${GRADIENTS[index % GRADIENTS.length][1]})` 
+                        }}
+                      />
+                      <span>{`${entry.name}: ${entry.value}`}</span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </Grid>
 
-        {/* Pet Types Distribution */}
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardHeader title="Phân bổ loại thú cưng" />
-            <Divider />
-            <CardContent>
-              <Box sx={{ width: '100%', height: 300 }}>
+          {/* Pet Types Distribution */}
+          <Grid item xs={12} md={6} className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
+            <Card className="report-card">
+              <CardHeader
+                title="Phân bổ loại thú cưng"
+              />
+              <CardContent className="report-chart-container">
                 <ResponsiveContainer>
                   <BarChart
                     data={reportData.petTypeData}
-                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
                   >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
+                    <defs>
+                      {GRADIENTS.map((gradient, index) => (
+                        <linearGradient
+                          key={`gradient-${index}`}
+                          id={`barColor-${index}`}
+                          x1="0"
+                          y1="0"
+                          x2="0"
+                          y2="1"
+                        >
+                          <stop offset="5%" stopColor={gradient[0]} stopOpacity={0.8}/>
+                          <stop offset="95%" stopColor={gradient[1]} stopOpacity={0.3}/>
+                        </linearGradient>
+                      ))}
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" />
+                    <XAxis dataKey="name" stroke="#666" />
+                    <YAxis stroke="#666" />
                     <Tooltip />
-                    <Legend />
-                    <Bar dataKey="count" fill="#1a237e" name="Số lượng" />
+                    <Bar
+                      dataKey="count"
+                      radius={[4, 4, 0, 0]}
+                      name="Số lượng"
+                    >
+                      {reportData.petTypeData.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={`url(#barColor-${index % GRADIENTS.length})`}
+                        />
+                      ))}
+                    </Bar>
                   </BarChart>
                 </ResponsiveContainer>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
 
-        {/* Appointment Status Distribution */}
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardHeader title="Trạng thái lịch hẹn" />
-            <Divider />
-            <CardContent>
-              <Box sx={{ width: '100%', height: 300 }}>
+          {/* Appointment Status Distribution */}
+          <Grid item xs={12} md={6} className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
+            <Card className="report-card">
+              <CardHeader
+                title="Trạng thái lịch hẹn"
+              />
+              <CardContent className="report-chart-container">
                 <ResponsiveContainer>
                   <PieChart>
+                    <defs>
+                      {GRADIENTS.map((gradient, index) => (
+                        <linearGradient
+                          key={`gradient-${index}`}
+                          id={`pieColor-${index}`}
+                          x1="0"
+                          y1="0"
+                          x2="1"
+                          y2="1"
+                        >
+                          <stop offset="0%" stopColor={gradient[0]}/>
+                          <stop offset="100%" stopColor={gradient[1]}/>
+                        </linearGradient>
+                      ))}
+                    </defs>
                     <Pie
                       data={reportData.statusData.map(item => ({
                         ...item,
@@ -179,26 +278,41 @@ const Reports = () => {
                       }))}
                       cx="50%"
                       cy="50%"
-                      outerRadius={80}
-                      fill="#8884d8"
+                      outerRadius={90}
                       dataKey="count"
                       nameKey="name"
-                      label={({name, percent}) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      labelLine={false}
+                      label={({name, percent}) => `${name} ${(percent * 100).toFixed(0)}%`}
                     >
                       {reportData.statusData.map((entry, index) => (
-                        <Cell key={`status-cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        <Cell 
+                          key={`status-cell-${index}`} 
+                          fill={`url(#pieColor-${index % GRADIENTS.length})`}
+                        />
                       ))}
                     </Pie>
                     <Tooltip />
-                    <Legend />
                   </PieChart>
                 </ResponsiveContainer>
-              </Box>
-            </CardContent>
-          </Card>
+                <div className="report-legend">
+                  {reportData.statusData.map((entry, index) => (
+                    <div key={`legend-${index}`} className="legend-item">
+                      <div
+                        className="legend-color"
+                        style={{ 
+                          background: `linear-gradient(135deg, ${GRADIENTS[index % GRADIENTS.length][0]}, ${GRADIENTS[index % GRADIENTS.length][1]})` 
+                        }}
+                      />
+                      <span>{`${getStatusName(entry.name)}: ${entry.count}`}</span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
-    </Box>
+      </Box>
+    </Fade>
   );
 };
 
