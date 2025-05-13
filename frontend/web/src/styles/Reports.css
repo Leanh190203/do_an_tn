@@ -5,7 +5,7 @@
 }
 
 .reports-title {
-  color: #1a237e;
+  color: #3843b6;
   margin-bottom: 32px;
   font-weight: 600;
   position: relative;
@@ -23,7 +23,7 @@
   transform: translateX(-50%);
   width: 80px;
   height: 4px;
-  background: linear-gradient(90deg, #1a237e, #534bae);
+  background: linear-gradient(90deg, #444fc7, #534bae);
   border-radius: 2px;
 }
 
@@ -58,7 +58,7 @@
 }
 
 .report-card .MuiCardHeader-root {
-  background: linear-gradient(135deg, #1a237e, #534bae);
+  background: linear-gradient(135deg, #4551d9, #534bae);
   color: white;
   padding: 20px;
   position: relative;
