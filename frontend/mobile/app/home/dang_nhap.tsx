@@ -148,8 +148,8 @@ export default function LoginScreen() {
             style={styles.skipButton}
             onPress={() => router.back()}
           >
-            <Text style={styles.skipButtonText}>Quay lại trang chủ</Text>
-            <MaterialCommunityIcons name="chevron-right" size={20} color="#FFFFFF" />
+           
+    
           </TouchableOpacity>
         </ScrollView>
       </LinearGradient>

@@ -219,13 +219,17 @@ export default function MedicalRecordDetailScreen() {
           </View>
           <View style={styles.row}>
             <Ionicons name="medical" size={20} color="#1976D2" />
-            <Text style={styles.label}>Chẩn đoán:</Text>
-            <Text style={styles.value}>{record.service}</Text>
+            <Text style={styles.label}>Dịch vụ:</Text>
+            <Text style={[styles.value, { color: '#1976D2' }]}>
+              {record.service || 'Chưa có thông tin'}
+            </Text>
           </View>
           <View style={styles.row}>
-            <Ionicons name="medkit" size={20} color="#1976D2" />
-            <Text style={styles.label}>Dịch vụ:</Text>
-            <Text style={styles.value}>{record.diagnosis || 'Chưa có chẩn đoán'}</Text>
+            <MaterialCommunityIcons name="stethoscope" size={20} color="#1976D2" />
+            <Text style={styles.label}>Chẩn đoán:</Text>
+            <Text style={[styles.value, { color: '#FF9800', fontStyle: 'italic' }]}>
+              Đang chuẩn đoán
+            </Text>
           </View>
           <View style={styles.row}>
             <Ionicons name="business" size={20} color="#1976D2" />

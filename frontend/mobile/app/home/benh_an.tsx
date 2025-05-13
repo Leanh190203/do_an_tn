@@ -354,33 +354,25 @@ export default function MedicalRecordsScreen() {
                   <View style={styles.cardDivider} />
                   
                   <View style={styles.cardContent}>
-                    <View style={styles.cardRow}>
-                      <View style={styles.cardIconContainer}>
-                        <Ionicons name="medical" size={20} color="#1976D2" />
+                    <View style={styles.infoMainRow}>
+                      <View style={styles.dateContainer}>
+                        <MaterialCommunityIcons name="calendar" size={16} color="#1976D2" />
+                        <Text style={styles.dateText}>{formatDate(item.date)}</Text>
+                      </View>                      <View style={[styles.serviceBadge]}>
+                        <MaterialCommunityIcons name="medical-bag" size={14} color="#1976D2" />
+                        <Text style={styles.serviceText} numberOfLines={2}>
+                          Dịch vụ: {item.service}
+                        </Text>
                       </View>
-                      <Text style={styles.cardLabel}>Chẩn đoán:</Text>
-                      <Text style={[styles.cardValue, styles.diagnosisText]} numberOfLines={1}>
-                        {item.service}
-                      </Text>
                     </View>
                     
-                    <View style={styles.cardRow}>
-                      <View style={styles.cardIconContainer}>
-                        <MaterialCommunityIcons name="hospital" size={20} color="#1976D2" />
+                    <View style={styles.diagnosisRow}>
+                      <View style={styles.diagnosisContainer}>
+                        <MaterialCommunityIcons name="stethoscope" size={16} color="#FF9800" />
+                        <Text style={styles.diagnosisLabel}>Chẩn đoán:</Text>
+                        <Text style={styles.diagnosisText}>Đang chuẩn đoán</Text>
                       </View>
-                      <Text style={styles.cardLabel}>Dịch vụ:</Text>
-                      <Text style={styles.cardValue}>{item.diagnosis || 'Chưa có chẩn đoán'}</Text>
                     </View>
-
-                    {item.pet_id && currentCustomer && item.customer_id === currentCustomer.id && (
-                      <TouchableOpacity 
-                        style={styles.viewPetButton}
-                        onPress={() => router.push(`/home/my_pets?edit=${item.pet_id}` as any)}
-                      >
-                        <MaterialCommunityIcons name="paw" size={16} color="#1976D2" />
-                        <Text style={styles.viewPetButtonText}>Sửa thú cưng</Text>
-                      </TouchableOpacity>
-                    )}
                   </View>
                   
                   <View style={styles.cardActions}>

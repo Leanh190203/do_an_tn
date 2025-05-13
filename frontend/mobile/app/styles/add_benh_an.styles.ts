@@ -519,4 +519,86 @@ export const styles = StyleSheet.create({
     color: '#333333',
     flex: 1,
   },
-}); 
+  
+  // Modal styles
+  modalHeaderContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  modalDetails: {
+    marginTop: 15,
+  },
+  detailRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 12,
+    paddingHorizontal: 15,
+  },
+  detailLabel: {
+    fontSize: 14,
+    color: '#616161',
+    width: 100,
+    marginRight: 10,
+  },
+  detailValue: {
+    flex: 1,
+    fontSize: 14,
+    color: '#212121',
+    fontWeight: '500',
+  },
+  appointmentStatusContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 15,
+    paddingHorizontal: 15,
+  },
+  appointmentStatusLabel: {
+    fontSize: 14,
+    color: '#616161',
+    width: 100,
+    marginRight: 10,
+  },
+  appointmentStatusBadge: {
+    backgroundColor: '#FFF3E0',
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+  },
+  appointmentStatusText: {
+    color: '#FF9800',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  secondaryButton: {
+    flex: 1,
+    backgroundColor: '#ECEFF1',
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+    marginRight: 10,
+    alignItems: 'center',
+  },
+  secondaryButtonText: {
+    color: '#455A64',
+    fontWeight: '600',
+    fontSize: 14,
+  },
+  primaryButton: {
+    flex: 1,
+    backgroundColor: '#1976D2',
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  primaryButtonText: {
+    color: '#FFFFFF',
+    fontWeight: '600',
+    fontSize: 14,
+    marginRight: 5,
+  },
+});

@@ -218,8 +218,8 @@ export default function EditMedicalRecordScreen() {
           <Text style={styles.label}>Chẩn đoán:</Text>
           <TextInput
             style={styles.input}
-            value={service}
-            onChangeText={setService}
+            value={diagnosis}
+            onChangeText={setDiagnosis}
             placeholder="Nhập chẩn đoán"
           />
         </View>
@@ -228,8 +228,8 @@ export default function EditMedicalRecordScreen() {
           <Text style={styles.label}>Dịch vụ:</Text>
           <TextInput
             style={styles.input}
-            value={diagnosis}
-            onChangeText={setDiagnosis}
+            value={service}
+            onChangeText={setService}
             placeholder="Nhập dịch vụ đã sử dụng"
           />
         </View>

@@ -191,35 +191,66 @@ export const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
   cardContent: {
-    padding: 16,
+    paddingTop: 8,
+    paddingHorizontal: 12,
+    paddingBottom: 12,
   },
-  cardRow: {
+  infoMainRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+    flexWrap: 'wrap',  // Cho phép xuống dòng nếu không đủ chỗ
+    gap: 8,  // Khoảng cách giữa các phần tử khi wrap
+  },
+  dateContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    backgroundColor: '#E3F2FD',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
   },
-  cardIconContainer: {
-    width: 32,
-    height: 32,
-    justifyContent: 'center',
+  dateText: {
+    marginLeft: 4,
+    fontSize: 12,
+    color: '#1976D2',
+    fontWeight: '500',
+  },
+  serviceBadge: {
+    flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#E3F2FD',
-    borderRadius: 16,
-    marginRight: 12,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    maxWidth: '60%',  // Cho phép chiếm nhiều không gian hơn
   },
-  cardLabel: {
-    width: 60,
-    fontSize: 14,
-    color: '#616161',
-    marginRight: 8,
+  serviceText: {
+    marginLeft: 4,
+    fontSize: 12,
+    color: '#1976D2',
+    fontWeight: '500',
+    flexShrink: 1,  // Cho phép text co lại khi quá dài
   },
-  cardValue: {
-    flex: 1,
-    fontSize: 15,
-    color: '#212121',
+  diagnosisRow: {
+    marginTop: 4,
+  },
+  diagnosisContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  diagnosisLabel: {
+    marginLeft: 4,
+    fontSize: 13,
+    color: '#666',
   },
   diagnosisText: {
+    marginLeft: 4,
+    fontSize: 13,
+    color: '#FF9800',
     fontStyle: 'italic',
+    fontWeight: '500',
   },
   cardActions: {
     flexDirection: 'row',
@@ -251,6 +282,18 @@ export const styles = StyleSheet.create({
     marginLeft: 4,
   },
   
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  infoText: {
+    marginLeft: 8,
+    fontSize: 14,
+    color: '#666',
+    flex: 1,
+  },
+
   // Floating action button
   addButton: {
     position: 'absolute',
@@ -268,4 +311,4 @@ export const styles = StyleSheet.create({
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 2 },
   },
-}); 
+});

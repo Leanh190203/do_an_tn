@@ -26,9 +26,9 @@ const medicalRecordService = {
         pet_id: data.pet_id,
         customer_id: data.customer_id,
         appointment_date: data.date,
-        service: data.diagnosis, // Đảo ngược data.diagnosis và data.service
+        service: data.service, // Fixed field mapping
         notes: data.notes || '',
-        diagnosis: data.service, // Đảo ngược data.diagnosis và data.service
+        diagnosis: data.diagnosis, // Fixed field mapping
         clinic: data.clinic || '',
         status: data.status
       }, {
@@ -192,9 +192,9 @@ const medicalRecordService = {
         pet_id: data.pet_id,
         customer_id: data.customer_id,
         appointment_date: data.date,
-        service: data.diagnosis, // Đảo ngược data.diagnosis và data.service
+        service: data.service, // Fixed field mapping
         notes: data.notes || '',
-        diagnosis: data.service, // Đảo ngược data.diagnosis và data.service
+        diagnosis: data.diagnosis, // Fixed field mapping
         clinic: data.clinic || '',
         status: data.status
       }, {

@@ -55,6 +55,17 @@ const serviceOptions = [
   { id: '8', name: 'Khám răng', icon: 'tooth' },
 ];
 
+const CustomPickerItem = ({ label, value }: { label: string; value: string }) => (
+  <Picker.Item label={label} value={value} />
+);
+
+const SafePickerItem = ({label, value}: {label: string; value: string}) => (
+  <View>
+    <Text>{label}</Text>
+    <Picker.Item label={label} value={value} />
+  </View>
+);
+
 export default function ThemBenhAnScreen() {
   const router = useRouter();
   const { user } = useAuth();
@@ -424,12 +435,12 @@ export default function ThemBenhAnScreen() {
                       onValueChange={handleCustomerChange}
                       enabled={!user} // Vô hiệu hóa picker khi đã đăng nhập
                     >
-                      <Picker.Item label="-- Chọn chủ thú cưng --" value="" />
+                      <SafePickerItem label="-- Chọn chủ thú cưng --" value="" />
                       {customers.map(customer => (
-                        <Picker.Item 
-                          key={customer.id} 
-                          label={`${customer.name}`}
-                          value={customer.id.toString()} 
+                        <SafePickerItem
+                          key={customer.id}
+                          label={customer.name}
+                          value={customer.id.toString()}
                         />
                       ))}
                     </Picker>
@@ -504,12 +515,12 @@ export default function ThemBenhAnScreen() {
                         selectedValue={selectedPet}
                         onValueChange={(itemValue: string) => setSelectedPet(itemValue)}
                       >
-                        <Picker.Item label="-- Chọn thú cưng --" value="" />
+                        <SafePickerItem label="-- Chọn thú cưng --" value="" />
                         {pets.map(pet => (
-                          <Picker.Item 
+                          <SafePickerItem
                             key={pet.id} 
-                            label={`${pet.name} (${pet.species})`} 
-                            value={pet.id.toString()} 
+                            label={`${pet.name} (${pet.species})`}
+                            value={pet.id.toString()}
                           />
                         ))}
                       </Picker>
@@ -582,7 +593,7 @@ export default function ThemBenhAnScreen() {
               
               <View style={styles.formGroup}>
                 <Text style={styles.label}>
-                  <Ionicons name="medical" size={18} color="#1976D2" /> Chẩn đoán:
+                  <Ionicons name="medical" size={18} color="#1976D2" /> Dịch vụ:
                 </Text>
 
                 <View style={styles.serviceOptionsContainer}>
@@ -613,13 +624,13 @@ export default function ThemBenhAnScreen() {
               
               <View style={styles.formGroup}>
                 <Text style={styles.label}>
-                  <MaterialCommunityIcons name="hospital" size={18} color="#1976D2" /> Dịch vụ:
+                  <MaterialCommunityIcons name="stethoscope" size={18} color="#1976D2" /> Chẩn đoán:
                 </Text>
                 <TextInput
                   style={styles.input}
-                  value={diagnosis}
+                  value={diagnosis} 
                   onChangeText={setDiagnosis}
-                  placeholder="Nhập dịch vụ cần sử dụng"
+                  placeholder="Nhập triệu chứng/chẩn đoán"
                 />
               </View>
             </View>
@@ -727,7 +738,7 @@ export default function ThemBenhAnScreen() {
   // Add the appointment confirmation modal component
   const renderAppointmentConfirmationModal = () => {
     if (!createdAppointment) return null;
-    
+
     return (
       <Modal
         visible={isModalVisible}
@@ -742,69 +753,81 @@ export default function ThemBenhAnScreen() {
                 colors={['#4CAF50', '#2E7D32']}
                 style={styles.modalHeaderGradient}
               >
-                <Ionicons name="checkmark-circle" size={40} color="#fff" />
-                <Text style={styles.modalHeaderText}>Đặt lịch thành công</Text>
+                <View style={styles.modalHeaderContent}>
+                  <Ionicons name="checkmark-circle" size={40} color="#fff" />
+                  <Text style={styles.modalHeaderText}>Đặt lịch thành công</Text>
+                </View>
               </LinearGradient>
             </View>
-            
+
             <View style={styles.modalBody}>
               <Text style={styles.modalTitle}>Chi tiết lịch hẹn</Text>
-              
-              <View style={styles.appointmentDetail}>
-                <Text style={styles.appointmentDetailLabel}>Thú cưng:</Text>
-                <Text style={styles.appointmentDetailValue}>
-                  {petDetails?.name} ({petDetails?.species})
-                  {petDetails?.age ? `, ${petDetails.age} tuổi` : ''}
-                </Text>
-              </View>
-              
-              <View style={styles.appointmentDetail}>
-                <Text style={styles.appointmentDetailLabel}>Chủ sở hữu:</Text>
-                <Text style={styles.appointmentDetailValue}>{customerDetails?.name}</Text>
-              </View>
-              
-              <View style={styles.appointmentDetail}>
-                <Text style={styles.appointmentDetailLabel}>Dịch vụ:</Text>
-                <Text style={styles.appointmentDetailValue}>{service}</Text>
-              </View>
-              
-              <View style={styles.appointmentDetail}>
-                <Text style={styles.appointmentDetailLabel}>Ngày hẹn:</Text>
-                <Text style={styles.appointmentDetailValue}>{date.toLocaleDateString('vi-VN')}</Text>
-              </View>
-              
-              {diagnosis && (
-                <View style={styles.appointmentDetail}>
-                  <Text style={styles.appointmentDetailLabel}>Triệu chứng:</Text>
-                  <Text style={styles.appointmentDetailValue}>{diagnosis}</Text>
+              <View style={styles.modalDetails}>
+                <View style={styles.detailRow}>
+                  <Text style={styles.detailLabel}>Thú cưng: </Text>
+                  <Text style={styles.detailValue}>
+                    <Text>{petDetails?.name}</Text>
+                    {petDetails?.species && (
+                      <Text> ({petDetails.species})</Text>
+                    )}
+                    {petDetails?.age && (
+                      <Text> - {petDetails.age} tuổi</Text>
+                    )}
+                  </Text>
                 </View>
-              )}
-              
-              <View style={styles.appointmentDetail}>
-                <Text style={styles.appointmentDetailLabel}>Trạng thái:</Text>
-                <View style={styles.statusBadge}>
-                  <Text style={styles.statusText}>Chờ xác nhận</Text>
+
+                <View style={styles.detailRow}>
+                  <Text style={styles.detailLabel}>Chủ thú cưng: </Text>
+                  <Text style={styles.detailValue}>
+                    {customerDetails?.name || ''}
+                  </Text>
+                </View>
+
+                <View style={styles.detailRow}>
+                  <Text style={styles.detailLabel}>Dịch vụ: </Text>
+                  <Text style={styles.detailValue}>{service || ''}</Text>
+                </View>
+
+                <View style={styles.detailRow}>
+                  <Text style={styles.detailLabel}>Ngày hẹn: </Text>
+                  <Text style={styles.detailValue}>
+                    {date ? date.toLocaleDateString('vi-VN') : ''}
+                  </Text>
+                </View>
+
+                {diagnosis && (
+                  <View style={styles.detailRow}>
+                    <Text style={styles.detailLabel}>Triệu chứng: </Text>
+                    <Text style={styles.detailValue}>{diagnosis}</Text>
+                  </View>
+                )}
+                
+                <View style={styles.appointmentStatusContainer}>
+                  <Text style={styles.appointmentStatusLabel}>Trạng thái: </Text>
+                  <View style={styles.appointmentStatusBadge}>
+                    <Text style={styles.appointmentStatusText}>Chờ xác nhận</Text>
+                  </View>
                 </View>
               </View>
-              
+
               <Text style={styles.noteText}>
                 Lịch hẹn của bạn đã được đặt thành công. Chúng tôi sẽ liên hệ để xác nhận trong thời gian sớm nhất.
               </Text>
             </View>
-            
+
             <View style={styles.modalFooter}>
               <TouchableOpacity 
-                style={styles.modalSecondaryButton}
+                style={styles.secondaryButton}
                 onPress={goToAppointmentList}
               >
-                <Text style={styles.modalSecondaryButtonText}>Danh sách lịch hẹn</Text>
+                <Text style={styles.secondaryButtonText}>Danh sách lịch hẹn</Text>
               </TouchableOpacity>
-              
+
               <TouchableOpacity 
-                style={styles.modalPrimaryButton}
+                style={styles.primaryButton}
                 onPress={viewAppointmentDetails}
               >
-                <Text style={styles.modalPrimaryButtonText}>Xem chi tiết</Text>
+                <Text style={styles.primaryButtonText}>Xem chi tiết</Text>
                 <Ionicons name="arrow-forward" size={16} color="#fff" />
               </TouchableOpacity>
             </View>
