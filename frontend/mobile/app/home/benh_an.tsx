@@ -368,9 +368,20 @@ export default function MedicalRecordsScreen() {
                     
                     <View style={styles.diagnosisRow}>
                       <View style={styles.diagnosisContainer}>
-                        <MaterialCommunityIcons name="stethoscope" size={16} color="#FF9800" />
+                        <MaterialCommunityIcons name="stethoscope" size={16} color={item.status === 'completed' ? '#4CAF50' : '#FF9800'} />
                         <Text style={styles.diagnosisLabel}>Chẩn đoán:</Text>
-                        <Text style={styles.diagnosisText}>Đang chuẩn đoán</Text>
+                        <Text style={[
+                          styles.diagnosisText, 
+                          {
+                            color: item.status === 'completed' ? '#4CAF50' : '#FF9800',
+                            fontStyle: item.status === 'completed' ? 'normal' : 'italic'
+                          }
+                        ]}>
+                          {item.status === 'completed' ? 
+                            'Đã hoàn thành' : 
+                            (item.diagnosis || 'Đang chuẩn đoán')
+                          }
+                        </Text>
                       </View>
                     </View>
                   </View>
