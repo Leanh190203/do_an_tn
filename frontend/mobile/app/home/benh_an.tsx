@@ -358,10 +358,11 @@ export default function MedicalRecordsScreen() {
                       <View style={styles.dateContainer}>
                         <MaterialCommunityIcons name="calendar" size={16} color="#1976D2" />
                         <Text style={styles.dateText}>{formatDate(item.date)}</Text>
-                      </View>                      <View style={[styles.serviceBadge]}>
+                      </View>
+                      <View style={[styles.serviceBadge]}>
                         <MaterialCommunityIcons name="medical-bag" size={14} color="#1976D2" />
                         <Text style={styles.serviceText} numberOfLines={2}>
-                          Dịch vụ: {item.service}
+                          {`Dịch vụ: ${item.service}`}
                         </Text>
                       </View>
                     </View>
