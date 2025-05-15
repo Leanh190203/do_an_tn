@@ -1,25 +1,20 @@
 import { StyleSheet } from 'react-native';
+import { commonColors, commonStyles } from './common.styles';
 
 export const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#F5F7FA',
+    ...commonStyles.container,
   },
   header: {
-    backgroundColor: '#1976D2',
+    ...commonStyles.header,
     paddingTop: 50,
     paddingBottom: 20,
-    paddingHorizontal: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   backIcon: {
     marginRight: 10,
   },
   headerTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
+    ...commonStyles.headerTitle,
   },
   content: {
     flex: 1,
@@ -29,7 +24,7 @@ export const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   infoBox: {
-    backgroundColor: '#E3F2FD',
+    backgroundColor: commonColors.infoLight,
     borderRadius: 10,
     padding: 16,
     flexDirection: 'row',
@@ -38,12 +33,12 @@ export const styles = StyleSheet.create({
   },
   infoText: {
     fontSize: 14,
-    color: '#1976D2',
+    color: commonColors.primary,
     flex: 1,
     marginLeft: 10,
   },
   formContainer: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: commonColors.surface,
     borderRadius: 16,
     padding: 20,
     shadowColor: '#000',
@@ -58,7 +53,7 @@ export const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#212121',
+    color: commonColors.textPrimary,
     marginBottom: 16,
   },
   serviceSection: {
@@ -74,22 +69,19 @@ export const styles = StyleSheet.create({
     marginBottom: 16,
   },
   label: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#424242',
-    marginBottom: 8,
+    ...commonStyles.label,
   },
   required: {
-    color: '#F44336',
+    color: commonColors.error,
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: commonColors.border,
     borderRadius: 8,
     paddingHorizontal: 12,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: commonColors.surface,
   },
   inputIcon: {
     marginRight: 10,
@@ -98,14 +90,14 @@ export const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     fontSize: 16,
-    color: '#212121',
+    color: commonColors.textPrimary,
   },
   textAreaContainer: {
     alignItems: 'flex-start',
     paddingTop: 10,
   },
   textArea: {
-    height: 100,
+    ...commonStyles.textArea,
   },
   serviceList: {
     marginTop: 8,
@@ -113,22 +105,22 @@ export const styles = StyleSheet.create({
   serviceItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: commonColors.surface,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: commonColors.border,
     padding: 12,
     marginBottom: 10,
   },
   selectedService: {
-    backgroundColor: '#1976D2',
-    borderColor: '#1976D2',
+    backgroundColor: commonColors.primary,
+    borderColor: commonColors.primary,
   },
   serviceIconContainer: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#E3F2FD',
+    backgroundColor: commonColors.infoLight,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -139,15 +131,15 @@ export const styles = StyleSheet.create({
   serviceName: {
     fontSize: 16,
     fontWeight: '500',
-    color: '#212121',
+    color: commonColors.textPrimary,
     marginBottom: 4,
   },
   servicePrice: {
     fontSize: 14,
-    color: '#757575',
+    color: commonColors.textSecondary,
   },
   selectedServiceText: {
-    color: '#FFFFFF',
+    color: commonColors.textInverted,
   },
   dateTimeContainer: {
     flexDirection: 'row',
@@ -166,36 +158,29 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: commonColors.border,
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 12,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: commonColors.surface,
   },
   dateTimeText: {
     fontSize: 16,
-    color: '#212121',
+    color: commonColors.textPrimary,
     flex: 1,
     marginLeft: 8,
   },
   submitButton: {
-    backgroundColor: '#1976D2',
-    borderRadius: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 16,
+    ...commonStyles.primaryButton,
     marginTop: 24,
   },
   submitButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: 'bold',
+    ...commonStyles.primaryButtonText,
     marginLeft: 8,
   },
   noteContainer: {
     marginTop: 24,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: commonColors.surface,
     borderRadius: 16,
     padding: 16,
     shadowColor: '#000',
@@ -210,7 +195,7 @@ export const styles = StyleSheet.create({
   noteTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#424242',
+    color: commonColors.textPrimary,
     marginBottom: 10,
   },
   noteItem: {
@@ -220,10 +205,11 @@ export const styles = StyleSheet.create({
   },
   noteText: {
     fontSize: 14,
-    color: '#616161',
+    color: commonColors.textSecondary,
     flex: 1,
   },
-  // Styles for not logged in screen
+
+  // Not logged in screen styles
   notLoggedInContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -238,35 +224,31 @@ export const styles = StyleSheet.create({
   notLoggedInTitle: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#1976D2',
+    color: commonColors.primary,
     marginBottom: 10,
   },
   notLoggedInText: {
     fontSize: 16,
-    color: '#757575',
+    color: commonColors.textSecondary,
     textAlign: 'center',
     marginBottom: 30,
   },
   loginButton: {
-    backgroundColor: '#1976D2',
+    ...commonStyles.primaryButton,
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 30,
-    flexDirection: 'row',
-    alignItems: 'center',
     marginBottom: 16,
   },
   loginButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
+    ...commonStyles.primaryButtonText,
     marginLeft: 8,
   },
   backButton: {
     padding: 8,
   },
   backButtonText: {
-    color: '#616161',
+    color: commonColors.textSecondary,
     fontSize: 14,
   },
-}); 
+});

@@ -19,6 +19,7 @@ import { styles } from '../styles/benh_an.styles';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAuth } from '../context/AuthContext';
 import customerService from '../services/customerService';
+import { commonColors } from '../styles/common.styles';
 
 interface MedicalRecordItem {
   id: number;
@@ -188,18 +189,18 @@ export default function MedicalRecordsScreen() {
     // Sử dụng status để xác định màu sắc thay vì dựa vào ngày
     switch (record.status) {
       case 'completed':
-        return '#4CAF50'; // Đã hoàn thành (xanh lá)
+        return commonColors.success;
       case 'confirmed':
-        return '#1976D2'; // Đã xác nhận (xanh dương)
+        return commonColors.primary;
       case 'pending':
-        return '#FF9800'; // Đang chờ (cam)
+        return commonColors.warning;
       case 'cancelled':
-        return '#F44336'; // Đã hủy (đỏ)
+        return commonColors.error;
       default:
         // Nếu không có status, kiểm tra theo ngày như cũ
         const recordDate = new Date(record.date);
         const today = new Date();
-        return recordDate > today ? '#FF9800' : '#4CAF50';
+        return recordDate > today ? commonColors.warning : commonColors.success;
     }
   };
 
@@ -225,7 +226,7 @@ export default function MedicalRecordsScreen() {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#1976D2" />
+        <ActivityIndicator size="large" color={commonColors.primary} />
         <Text style={styles.loadingText}>Đang tải danh sách bệnh án...</Text>
       </View>
     );
@@ -233,28 +234,28 @@ export default function MedicalRecordsScreen() {
 
   return (
     <View style={styles.rootContainer}>
-      <StatusBar barStyle="light-content" backgroundColor="#1976D2" />
+      <StatusBar barStyle="light-content" backgroundColor={commonColors.primary} />
       
       {/* Header */}
       <LinearGradient
-        colors={['#1976D2', '#2196F3']}
+        colors={[commonColors.primary, commonColors.primaryLight]}
         style={styles.header}
       >
         <TouchableOpacity 
           style={styles.backButton}
           onPress={() => router.back()}
         >
-          <Ionicons name="arrow-back" size={24} color="#FFF" />
+          <Ionicons name="arrow-back" size={24} color={commonColors.textInverted} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Lịch sử khám & Lịch hẹn</Text>
         <TouchableOpacity onPress={toggleSearchBar}>
-          <Ionicons name={isSearchVisible ? "close" : "search"} size={24} color="#FFF" />
+          <Ionicons name={isSearchVisible ? "close" : "search"} size={24} color={commonColors.textInverted} />
         </TouchableOpacity>
       </LinearGradient>
       
       <Animated.View style={[styles.searchContainer, { height: searchBarHeight }]}>
         <View style={styles.searchInputContainer}>
-          <Ionicons name="search" size={20} color="#666" style={styles.searchIcon} />
+          <Ionicons name="search" size={20} color={commonColors.textSecondary} style={styles.searchIcon} />
           <TextInput
             style={styles.searchInput}
             placeholder="Tìm kiếm theo tên thú cưng hoặc dịch vụ..."
@@ -263,7 +264,7 @@ export default function MedicalRecordsScreen() {
           />
           {searchQuery.length > 0 && (
             <TouchableOpacity onPress={() => setSearchQuery('')}>
-              <Ionicons name="close-circle" size={20} color="#666" />
+              <Ionicons name="close-circle" size={20} color={commonColors.textSecondary} />
             </TouchableOpacity>
           )}
         </View>
@@ -313,7 +314,7 @@ export default function MedicalRecordsScreen() {
         
         {filteredRecords.length === 0 ? (
           <View style={styles.emptyContainer}>
-            <MaterialCommunityIcons name="clipboard-text-outline" size={80} color="#BBDEFB" />
+            <MaterialCommunityIcons name="clipboard-text-outline" size={80} color={commonColors.primaryLight} />
             <Text style={styles.emptyTitle}>Không có bệnh án nào</Text>
             <TouchableOpacity 
               style={styles.emptyButton}
@@ -356,11 +357,11 @@ export default function MedicalRecordsScreen() {
                   <View style={styles.cardContent}>
                     <View style={styles.infoMainRow}>
                       <View style={styles.dateContainer}>
-                        <MaterialCommunityIcons name="calendar" size={16} color="#1976D2" />
+                        <MaterialCommunityIcons name="calendar" size={16} color={commonColors.primary} />
                         <Text style={styles.dateText}>{formatDate(item.date)}</Text>
                       </View>
-                      <View style={[styles.serviceBadge]}>
-                        <MaterialCommunityIcons name="medical-bag" size={14} color="#1976D2" />
+                      <View style={styles.serviceBadge}>
+                        <MaterialCommunityIcons name="medical-bag" size={14} color={commonColors.primary} />
                         <Text style={styles.serviceText} numberOfLines={2}>
                           {`Dịch vụ: ${item.service}`}
                         </Text>
@@ -369,12 +370,16 @@ export default function MedicalRecordsScreen() {
                     
                     <View style={styles.diagnosisRow}>
                       <View style={styles.diagnosisContainer}>
-                        <MaterialCommunityIcons name="stethoscope" size={16} color={item.status === 'completed' ? '#4CAF50' : '#FF9800'} />
+                        <MaterialCommunityIcons 
+                          name="stethoscope" 
+                          size={16} 
+                          color={item.status === 'completed' ? commonColors.success : commonColors.warning} 
+                        />
                         <Text style={styles.diagnosisLabel}>Chẩn đoán:</Text>
                         <Text style={[
                           styles.diagnosisText, 
                           {
-                            color: item.status === 'completed' ? '#4CAF50' : '#FF9800',
+                            color: item.status === 'completed' ? commonColors.success : commonColors.warning,
                             fontStyle: item.status === 'completed' ? 'normal' : 'italic'
                           }
                         ]}>
@@ -389,7 +394,7 @@ export default function MedicalRecordsScreen() {
                   
                   <View style={styles.cardActions}>
                     <Text style={styles.viewDetailsText}>Xem chi tiết</Text>
-                    <Ionicons name="chevron-forward" size={16} color="#1976D2" />
+                    <Ionicons name="chevron-forward" size={16} color={commonColors.primary} />
                   </View>
                 </AnimatedTouchable>
               );
@@ -398,7 +403,7 @@ export default function MedicalRecordsScreen() {
               <RefreshControl
                 refreshing={refreshing}
                 onRefresh={onRefresh}
-                colors={["#1976D2"]}
+                colors={[commonColors.primary]}
               />
             }
           />
@@ -409,7 +414,7 @@ export default function MedicalRecordsScreen() {
         style={styles.addButton} 
         onPress={() => router.push('/home/them_benh_an')}
       >
-        <Ionicons name="add" size={24} color="#fff" />
+        <Ionicons name="add" size={24} color={commonColors.textInverted} />
       </TouchableOpacity>
     </View>
   );

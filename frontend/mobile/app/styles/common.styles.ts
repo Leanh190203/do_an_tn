@@ -1,17 +1,47 @@
 import { StyleSheet } from 'react-native';
 
 export const commonColors = {
+  // Primary colors
   primary: '#1976D2',
   primaryDark: '#0D47A1',
   primaryLight: '#BBDEFB',
+  
+  // Secondary colors
   accent: '#00897B',
-  danger: '#F44336',
-  background: '#E3F2FD',
+  accentDark: '#00695C',
+  accentLight: '#B2DFDB',
+  
+  // Status colors
+  success: '#4CAF50',
+  successDark: '#388E3C',
+  successLight: '#C8E6C9',
+  warning: '#FFC107',
+  warningDark: '#FFA000',
+  warningLight: '#FFECB3',
+  error: '#F44336',
+  errorDark: '#D32F2F',
+  errorLight: '#FFCDD2',
+  info: '#2196F3',
+  infoLight: '#E3F2FD',
+  
+  // Neutral colors
+  background: '#F5F7FA',
+  surface: '#FFFFFF',
   cardBackground: '#FFFFFF',
-  textPrimary: '#212121',
-  textSecondary: '#616161',
   border: '#E0E0E0',
-  divider: '#E0E0E0',
+  divider: '#EEEEEE',
+  
+  // Text colors
+  textPrimary: '#212121', 
+  textSecondary: '#757575',
+  textDisabled: '#9E9E9E',
+  textInverted: '#FFFFFF',
+  
+  // Status badge colors
+  pending: '#FF9800',
+  confirmed: '#4CAF50',
+  cancelled: '#F44336',
+  completed: '#1976D2'
 };
 
 export const commonStyles = StyleSheet.create({
@@ -21,7 +51,7 @@ export const commonStyles = StyleSheet.create({
     backgroundColor: commonColors.background,
   },
   
-  // Loading styles
+  // Loading states
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -43,7 +73,7 @@ export const commonStyles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   headerTitle: {
-    color: '#fff',
+    color: commonColors.textInverted,
     fontSize: 20,
     fontWeight: 'bold',
     flex: 1,
@@ -64,15 +94,16 @@ export const commonStyles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 8,
-    color: commonColors.primaryDark,
+    color: commonColors.textPrimary,
   },
   input: {
-    backgroundColor: '#fff',
+    backgroundColor: commonColors.surface,
     borderRadius: 8,
     padding: 12,
     borderWidth: 1,
-    borderColor: commonColors.primaryLight,
+    borderColor: commonColors.border,
     fontSize: 16,
+    color: commonColors.textPrimary,
   },
   textArea: {
     height: 100,
@@ -94,6 +125,11 @@ export const commonStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  primaryButtonText: {
+    color: commonColors.textInverted,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   secondaryButton: {
     backgroundColor: commonColors.accent,
     borderRadius: 8,
@@ -102,11 +138,10 @@ export const commonStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+  secondaryButtonText: {
+    color: commonColors.textInverted,
     fontSize: 16,
-    marginLeft: 8,
+    fontWeight: 'bold', 
   },
   cancelButton: {
     backgroundColor: '#ECEFF1',
@@ -115,31 +150,62 @@ export const commonStyles = StyleSheet.create({
     alignItems: 'center',
   },
   cancelButtonText: {
-    color: '#455A64',
-    fontWeight: 'bold',
+    color: commonColors.textSecondary,
     fontSize: 16,
+    fontWeight: 'bold',
   },
   
   // Card styles
   card: {
     backgroundColor: commonColors.cardBackground,
-    borderRadius: 10,
-    margin: 15,
-    padding: 15,
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
     shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 5,
+    shadowRadius: 4,
     elevation: 3,
   },
   
   // Text styles
   title: {
-    fontSize: 19,
+    fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-    color: commonColors.primaryDark,
-    textTransform: 'uppercase',
-    letterSpacing: 1.2,
+    color: commonColors.textPrimary,
+    marginBottom: 16,
   },
-}); 
+  subtitle: {
+    fontSize: 16,
+    color: commonColors.textSecondary,
+    marginBottom: 8,
+  },
+  
+  // Status badge styles
+  statusBadge: {
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  statusBadgeText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: commonColors.textInverted,
+  },
+  
+  // Empty state styles
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: commonColors.textSecondary,
+    textAlign: 'center',
+    marginTop: 8,
+  }
+});

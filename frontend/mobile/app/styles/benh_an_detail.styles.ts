@@ -1,20 +1,17 @@
 import { StyleSheet } from 'react-native';
+import { commonColors, commonStyles } from './common.styles';
 
 export const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#E3F2FD',
+    ...commonStyles.container,
+    backgroundColor: commonColors.infoLight,
   },
   loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#E3F2FD',
+    ...commonStyles.loadingContainer,
+    backgroundColor: commonColors.infoLight,
   },
   loadingText: {
-    marginTop: 10,
-    fontSize: 16,
-    color: '#1976D2',
+    ...commonStyles.loadingText,
   },
   errorContainer: {
     flex: 1,
@@ -24,32 +21,23 @@ export const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 18,
-    color: '#455A64',
+    color: commonColors.textSecondary,
     marginTop: 10,
     marginBottom: 20,
   },
   header: {
-    backgroundColor: '#1976D2',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 15,
-    paddingHorizontal: 20,
+    ...commonStyles.header,
   },
   headerTitle: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
-    flex: 1,
-    textAlign: 'center',
-    marginRight: 24, // To center the title correctly with back button
+    ...commonStyles.headerTitle,
   },
   backButton: {
-    backgroundColor: '#1565C0',
+    backgroundColor: commonColors.primaryDark,
     borderRadius: 8,
     padding: 8,
   },
   backButtonText: {
-    color: '#fff',
+    color: commonColors.textInverted,
     fontWeight: 'bold',
     fontSize: 16,
     textAlign: 'center',
@@ -57,14 +45,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   card: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    margin: 15,
-    padding: 15,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
+    ...commonStyles.card,
   },
   section: {
     marginBottom: 10,
@@ -72,7 +53,7 @@ export const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#0D47A1',
+    color: commonColors.primaryDark,
     marginBottom: 10,
   },
   row: {
@@ -83,23 +64,23 @@ export const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#455A64',
+    color: commonColors.textSecondary,
     marginLeft: 10,
     marginRight: 5,
   },
   value: {
     fontSize: 16,
-    color: '#263238',
+    color: commonColors.textPrimary,
     flex: 1,
   },
   divider: {
     height: 1,
-    backgroundColor: '#E0E0E0',
+    backgroundColor: commonColors.divider,
     marginVertical: 15,
   },
   notesText: {
     fontSize: 16,
-    color: '#455A64',
+    color: commonColors.textSecondary,
     lineHeight: 22,
   },
   actionButtons: {
@@ -118,45 +99,39 @@ export const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   editButton: {
-    backgroundColor: '#00897B',
+    backgroundColor: commonColors.accent,
   },
   deleteButton: {
-    backgroundColor: '#F44336',
+    backgroundColor: commonColors.error,
   },
   actionButtonText: {
-    color: '#fff',
+    color: commonColors.textInverted,
     fontWeight: 'bold',
     fontSize: 16,
     marginLeft: 8,
   },
   statusBadge: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
+    ...commonStyles.statusBadge,
   },
   statusBadgeText: {
-    color: '#FFF',
-    fontSize: 12,
-    fontWeight: 'bold',
+    ...commonStyles.statusBadgeText,
   },
   viewPetButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#E1F5FE',
+    backgroundColor: commonColors.infoLight,
     padding: 15,
     borderRadius: 8,
     margin: 15,
     marginTop: 5,
     borderWidth: 1,
-    borderColor: '#1976D2',
+    borderColor: commonColors.primary,
   },
   viewPetButtonText: {
-    color: '#1976D2',
+    color: commonColors.primary,
     fontWeight: 'bold',
     fontSize: 16,
     marginLeft: 8,
   }
-}); 
+});

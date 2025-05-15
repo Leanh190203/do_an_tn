@@ -4,49 +4,29 @@ import { commonColors, commonStyles } from './common.styles';
 const { width } = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
-  // Root container
   rootContainer: {
-    flex: 1,
-    backgroundColor: '#F5F7FA',
-  },
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#F5F7FA',
-  },
-  listContainer: {
-    paddingBottom: 80, // Space for floating button
+    ...commonStyles.container,
   },
   
   // Header styles
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    ...commonStyles.header,
     paddingTop: 50,
     paddingBottom: 15,
-    paddingHorizontal: 16,
   },
   headerTitle: {
-    color: '#FFFFFF',
-    fontSize: 20,
-    fontWeight: 'bold',
+    ...commonStyles.headerTitle,
   },
   backButton: {
-    padding: 8,
+    ...commonStyles.backButton,
   },
   
   // Loading styles
   loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5F7FA',
+    ...commonStyles.loadingContainer,
   },
   loadingText: {
-    marginTop: 10,
-    fontSize: 16,
-    color: '#1976D2',
+    ...commonStyles.loadingText,
   },
   
   // Filter styles
@@ -54,7 +34,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 16,
     borderRadius: 8,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: commonColors.surface,
     padding: 4,
     elevation: 1,
     shadowColor: '#000',
@@ -71,14 +51,14 @@ export const styles = StyleSheet.create({
     borderRadius: 6,
   },
   filterButtonActive: {
-    backgroundColor: '#E3F2FD',
+    backgroundColor: commonColors.infoLight,
   },
   filterButtonText: {
     fontSize: 14,
-    color: '#616161',
+    color: commonColors.textSecondary,
   },
   filterButtonTextActive: {
-    color: '#1976D2',
+    color: commonColors.primary,
     fontWeight: 'bold',
   },
   
@@ -86,20 +66,19 @@ export const styles = StyleSheet.create({
   searchContainer: {
     paddingHorizontal: 16,
     paddingVertical: 8,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: commonColors.surface,
     borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
-    overflow: 'hidden',
+    borderBottomColor: commonColors.border,
   },
   searchInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: commonColors.background,
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: commonColors.border,
   },
   searchIcon: {
     marginRight: 8,
@@ -107,54 +86,31 @@ export const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 15,
-    color: '#333',
+    color: commonColors.textPrimary,
     paddingVertical: 4,
   },
   
   // Empty state
   emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
+    ...commonStyles.emptyContainer,
   },
   emptyTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#455A64',
-    marginTop: 16,
-    marginBottom: 8,
+    ...commonStyles.title,
   },
   emptyText: {
-    fontSize: 16,
-    color: '#90A4AE',
-    textAlign: 'center',
+    ...commonStyles.emptyText,
     marginBottom: 24,
-    lineHeight: 22,
   },
   emptyButton: {
-    backgroundColor: '#1976D2',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
+    ...commonStyles.primaryButton,
   },
   emptyButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: 'bold',
+    ...commonStyles.primaryButtonText,
   },
   
   // Card styles
   card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 3,
-    overflow: 'hidden',
+    ...commonStyles.card,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -168,107 +124,62 @@ export const styles = StyleSheet.create({
   petName: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#212121',
+    color: commonColors.textPrimary,
     marginBottom: 4,
   },
   petOwner: {
     fontSize: 14,
-    color: '#757575',
+    color: commonColors.textSecondary,
   },
   statusBadge: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
+    ...commonStyles.statusBadge,
   },
   statusText: {
-    color: '#FFFFFF',
-    fontSize: 12,
-    fontWeight: 'bold',
+    ...commonStyles.statusBadgeText,
   },
-  cardDivider: {
-    height: 1,
-    backgroundColor: '#E0E0E0',
-    marginHorizontal: 16,
+  
+  // Details section
+  detailsContainer: {
+    padding: 16,
+    borderTopWidth: 1,
+    borderTopColor: commonColors.divider,
   },
-  cardContent: {
-    paddingTop: 8,
-    paddingHorizontal: 12,
-    paddingBottom: 12,
-  },
-  infoMainRow: {
+  detailRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 8,
-    flexWrap: 'wrap',  // Cho phép xuống dòng nếu không đủ chỗ
-    gap: 8,  // Khoảng cách giữa các phần tử khi wrap
   },
-  dateContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#E3F2FD',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-  },
-  dateText: {
-    marginLeft: 4,
-    fontSize: 12,
-    color: '#1976D2',
-    fontWeight: '500',
-  },
-  serviceBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#E3F2FD',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-    maxWidth: '60%',  // Cho phép chiếm nhiều không gian hơn
-  },
-  serviceText: {
-    marginLeft: 4,
-    fontSize: 12,
-    color: '#1976D2',
-    fontWeight: '500',
-    flexShrink: 1,  // Cho phép text co lại khi quá dài
-  },
-  diagnosisRow: {
-    marginTop: 4,
-  },
-  diagnosisContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  diagnosisLabel: {
+  detailLabel: {
     marginLeft: 4,
     fontSize: 13,
-    color: '#666',
+    color: commonColors.textSecondary,
   },
   diagnosisText: {
     marginLeft: 4,
     fontSize: 13,
-    color: '#FF9800',
+    color: commonColors.warning,
     fontStyle: 'italic',
     fontWeight: '500',
   },
+  
+  // Card actions
   cardActions: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
     paddingVertical: 12,
     paddingHorizontal: 16,
-    backgroundColor: '#FAFAFA',
+    backgroundColor: commonColors.background,
   },
   viewDetailsText: {
     fontSize: 14,
-    color: '#1976D2',
+    color: commonColors.primary,
     fontWeight: '500',
   },
   viewPetButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#E3F2FD',
+    backgroundColor: commonColors.infoLight,
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 16,
@@ -277,23 +188,11 @@ export const styles = StyleSheet.create({
   },
   viewPetButtonText: {
     fontSize: 12,
-    color: '#1976D2',
+    color: commonColors.primary,
     fontWeight: '500',
     marginLeft: 4,
   },
   
-  infoRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  infoText: {
-    marginLeft: 8,
-    fontSize: 14,
-    color: '#666',
-    flex: 1,
-  },
-
   // Floating action button
   addButton: {
     position: 'absolute',
@@ -302,7 +201,7 @@ export const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: '#1976D2',
+    backgroundColor: commonColors.primary,
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 5,
@@ -310,5 +209,76 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 2 },
+  },
+  
+  // New styles
+  container: {
+    flex: 1,
+    backgroundColor: commonColors.background,
+  },
+  
+  listContainer: {
+    paddingBottom: 80, // Space for floating button
+  },
+  
+  cardDivider: {
+    height: 1,
+    backgroundColor: commonColors.divider,
+    marginHorizontal: 16,
+  },
+  
+  cardContent: {
+    padding: 16,
+  },
+  
+  infoMainRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  
+  dateContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  
+  dateText: {
+    fontSize: 14,
+    color: commonColors.textSecondary,
+    marginLeft: 8,
+  },
+  
+  serviceBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: commonColors.infoLight,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 16,
+  },
+  
+  serviceText: {
+    fontSize: 14,
+    color: commonColors.textSecondary,
+    marginLeft: 8,
+  },
+  
+  diagnosisRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  
+  diagnosisContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  
+  diagnosisLabel: {
+    fontSize: 14,
+    color: commonColors.textSecondary,
+    marginLeft: 8,
+    marginRight: 4,
   },
 });
