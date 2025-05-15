@@ -129,6 +129,10 @@ export default function HomeScreen() {
     router.push(`/bai-viet/${id}` as never);
   };
 
+  const handleServicePress = (service: any) => {
+    checkLoginAndNavigate('/home/them_benh_an', 'đặt lịch khám');
+  };
+
   const renderDotIndicator = () => {
     return (
       <View style={styles.dotContainer}>
@@ -290,7 +294,7 @@ export default function HomeScreen() {
                 key={service.id} 
                 style={styles.serviceItem}
                 activeOpacity={0.7}
-                onPress={() => {}}
+                onPress={() => checkLoginAndNavigate('/home/them_benh_an', 'đặt lịch khám')}
               >
                 <View style={[styles.serviceIconContainer, { backgroundColor: `${service.color}10` }]}>
                   <MaterialCommunityIcons name={service.icon as any} size={26} color={service.color} />
