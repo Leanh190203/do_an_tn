@@ -186,6 +186,65 @@ export const styles = StyleSheet.create({
     color: commonColors.textInverted,
   },
   
+  // Pet selection toggle
+  petSelectionToggle: {
+    flexDirection: 'row',
+    borderRadius: 8,
+    overflow: 'hidden',
+    backgroundColor: commonColors.background,
+    marginTop: 8,
+    marginBottom: 16,
+  },
+  toggleButton: {
+    flex: 1,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: commonColors.border,
+  },
+  toggleButtonActive: {
+    backgroundColor: commonColors.primary,
+    borderColor: commonColors.primary,
+  },
+  toggleText: {
+    fontSize: 14,
+    color: commonColors.textSecondary,
+  },
+  toggleTextActive: {
+    color: commonColors.textInverted,
+    fontWeight: '600',
+  },
+
+  // Custom pet form
+  customPetForm: {
+    marginTop: 10,
+    backgroundColor: commonColors.surface,
+    borderRadius: 8,
+    padding: 16,
+  },
+
+  // Selected owner container
+  selectedOwnerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: commonColors.successLight,
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 16,
+  },
+  selectedOwnerLabel: {
+    fontSize: 14,
+    color: commonColors.textSecondary,
+    marginRight: 8,
+  },
+  selectedOwnerValue: {
+    fontSize: 16,
+    color: commonColors.success,
+    fontWeight: '500',
+  },
+  
   // Footer
   footer: {
     position: 'absolute',
@@ -220,17 +279,18 @@ export const styles = StyleSheet.create({
     flex: 2,
   },
   submitButton: {
-    backgroundColor: commonColors.success,
-    borderRadius: 8,
+    backgroundColor: '#4CAF50',
     paddingVertical: 12,
-    paddingHorizontal: 16,
+    borderRadius: 8,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
   },
   buttonDisabled: {
     opacity: 0.7,
+  },
+  disabledButton: {
+    opacity: 0.6,
   },
   buttonText: {
     color: commonColors.textInverted,
@@ -330,21 +390,16 @@ export const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
+    justifyContent: 'flex-end', // Modal slides up from bottom
   },
   modalContent: {
-    backgroundColor: commonColors.surface,
-    borderRadius: 12,
-    width: '100%',
-    maxWidth: 450,
-    overflow: 'hidden',
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
+    backgroundColor: '#F3F4F6',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    maxHeight: '90%',
+  },
+  modalBody: {
+    padding: 20,
   },
   modalHeader: {
     width: '100%',
@@ -360,9 +415,6 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginLeft: 10,
-  },
-  modalBody: {
-    padding: 20,
   },
   modalTitle: {
     fontSize: 18,
@@ -406,5 +458,141 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 14,
     marginRight: 5,
+  },
+  
+  // Modal styles for confirmation
+  successHeader: {
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    overflow: 'hidden',
+  },
+  successHeaderContent: {
+    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  successHeaderText: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginTop: 10,
+  },
+  detailCard: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 20,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  detailCardTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1F2937',
+    marginBottom: 15,
+  },
+  detailRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  detailIconContainer: {
+    width: 40,
+    height: 40,
+    backgroundColor: '#E8F5E9',
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  detailTextContainer: {
+    flex: 1,
+  },
+  detailLabel: {
+    fontSize: 14,
+    color: '#6B7280',
+    marginBottom: 4,
+  },
+  detailValue: {
+    fontSize: 16,
+    color: '#111827',
+    fontWeight: '500',
+  },
+  detailSubtext: {
+    fontSize: 14,
+    color: '#6B7280',
+  },
+  statusContainer: {
+    marginTop: 5,
+    marginBottom: 15,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  statusBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF3E0',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+  },
+  statusText: {
+    color: '#FB8C00',
+    fontSize: 14,
+    fontWeight: '600',
+    marginLeft: 6,
+  },
+  noteContainer: {
+    backgroundColor: '#F3F4F6',
+    padding: 15,
+    borderRadius: 8,
+  },
+  noteText: {
+    color: '#4B5563',
+    fontSize: 14,
+    lineHeight: 20,
+    textAlign: 'center',
+  },
+  buttonGroup: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  secondaryButton: {
+    flex: 1,
+    backgroundColor: '#F3F4F6',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginRight: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  secondaryButtonText: {
+    color: '#374151',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  primaryButton: {
+    flex: 1,
+    backgroundColor: '#4CAF50',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginLeft: 10,
+  },
+  primaryButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

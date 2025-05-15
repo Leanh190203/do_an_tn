@@ -735,7 +735,6 @@ export default function ThemBenhAnScreen() {
     }
   };
 
-  // Add the appointment confirmation modal component
   const renderAppointmentConfirmationModal = () => {
     if (!createdAppointment) return null;
 
@@ -748,88 +747,107 @@ export default function ThemBenhAnScreen() {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <LinearGradient
-                colors={['#4CAF50', '#2E7D32']}
-                style={styles.modalHeaderGradient}
-              >
-                <View style={styles.modalHeaderContent}>
-                  <Ionicons name="checkmark-circle" size={40} color="#fff" />
-                  <Text style={styles.modalHeaderText}>Đặt lịch thành công</Text>
-                </View>
-              </LinearGradient>
-            </View>
+            <LinearGradient
+              colors={['#4CAF50', '#2E7D32']}
+              style={styles.successHeader}
+            >
+              <View style={styles.successHeaderContent}>
+                <Ionicons name="checkmark-circle-outline" size={50} color="#fff" />
+                <Text style={styles.successHeaderText}>Đặt lịch thành công!</Text>
+              </View>
+            </LinearGradient>
 
             <View style={styles.modalBody}>
-              <Text style={styles.modalTitle}>Chi tiết lịch hẹn</Text>
-              <View style={styles.modalDetails}>
-                <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>Thú cưng: </Text>
-                  <Text style={styles.detailValue}>
-                    <Text>{petDetails?.name}</Text>
-                    {petDetails?.species && (
-                      <Text> ({petDetails.species})</Text>
-                    )}
-                    {petDetails?.age && (
-                      <Text> - {petDetails.age} tuổi</Text>
-                    )}
-                  </Text>
-                </View>
-
-                <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>Chủ thú cưng: </Text>
-                  <Text style={styles.detailValue}>
-                    {customerDetails?.name || ''}
-                  </Text>
-                </View>
-
-                <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>Dịch vụ: </Text>
-                  <Text style={styles.detailValue}>{service || ''}</Text>
-                </View>
-
-                <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>Ngày hẹn: </Text>
-                  <Text style={styles.detailValue}>
-                    {date ? date.toLocaleDateString('vi-VN') : ''}
-                  </Text>
-                </View>
-
-                {diagnosis && (
-                  <View style={styles.detailRow}>
-                    <Text style={styles.detailLabel}>Triệu chứng: </Text>
-                    <Text style={styles.detailValue}>{diagnosis}</Text>
-                  </View>
-                )}
+              <View style={styles.detailCard}>
+                <Text style={styles.detailCardTitle}>Thông tin lịch hẹn</Text>
                 
-                <View style={styles.appointmentStatusContainer}>
-                  <Text style={styles.appointmentStatusLabel}>Trạng thái: </Text>
-                  <View style={styles.appointmentStatusBadge}>
-                    <Text style={styles.appointmentStatusText}>Chờ xác nhận</Text>
+                <View style={styles.detailRow}>
+                  <View style={styles.detailIconContainer}>
+                    <Ionicons name="paw" size={20} color="#4CAF50" />
                   </View>
+                  <View style={styles.detailTextContainer}>
+                    <Text style={styles.detailLabel}>Thú cưng</Text>
+                    <Text style={styles.detailValue}>
+                      {petDetails?.name}
+                      <Text style={styles.detailSubtext}>
+                        {petDetails?.species ? ` - ${petDetails.species}` : ''}
+                        {petDetails?.age ? ` - ${petDetails.age} tuổi` : ''}
+                      </Text>
+                    </Text>
+                  </View>
+                </View>
+
+                <View style={styles.detailRow}>
+                  <View style={styles.detailIconContainer}>
+                    <Ionicons name="person" size={20} color="#4CAF50" />
+                  </View>
+                  <View style={styles.detailTextContainer}>
+                    <Text style={styles.detailLabel}>Chủ thú cưng</Text>
+                    <Text style={styles.detailValue}>{customerDetails?.name}</Text>
+                  </View>
+                </View>
+
+                <View style={styles.detailRow}>
+                  <View style={styles.detailIconContainer}>
+                    <Ionicons name="calendar" size={20} color="#4CAF50" />
+                  </View>
+                  <View style={styles.detailTextContainer}>
+                    <Text style={styles.detailLabel}>Ngày hẹn</Text>
+                    <Text style={styles.detailValue}>
+                      {new Date(createdAppointment.date).toLocaleDateString('vi-VN')}
+                    </Text>
+                  </View>
+                </View>
+
+                <View style={styles.detailRow}>
+                  <View style={styles.detailIconContainer}>
+                    <Ionicons name="medical" size={20} color="#4CAF50" />
+                  </View>
+                  <View style={styles.detailTextContainer}>
+                    <Text style={styles.detailLabel}>Dịch vụ</Text>
+                    <Text style={styles.detailValue}>{createdAppointment.service}</Text>
+                  </View>
+                </View>
+
+                <View style={styles.statusContainer}>
+                  <View style={styles.statusBadge}>
+                    <Ionicons name="time-outline" size={16} color="#FB8C00" />
+                    <Text style={styles.statusText}>Đang chờ xác nhận</Text>
+                  </View>
+                </View>
+
+                <View style={styles.noteContainer}>
+                  <Text style={styles.noteText}>
+                    Chúng tôi sẽ liên hệ để xác nhận lịch hẹn của bạn trong thời gian sớm nhất
+                  </Text>
                 </View>
               </View>
 
-              <Text style={styles.noteText}>
-                Lịch hẹn của bạn đã được đặt thành công. Chúng tôi sẽ liên hệ để xác nhận trong thời gian sớm nhất.
-              </Text>
-            </View>
+              <View style={styles.buttonGroup}>
+                <TouchableOpacity 
+                  style={styles.secondaryButton}
+                  onPress={goToAppointmentList}
+                >
+                  <Text style={styles.secondaryButtonText}>
+                    Danh sách lịch hẹn
+                  </Text>
+                </TouchableOpacity>
 
-            <View style={styles.modalFooter}>
-              <TouchableOpacity 
-                style={styles.secondaryButton}
-                onPress={goToAppointmentList}
-              >
-                <Text style={styles.secondaryButtonText}>Danh sách lịch hẹn</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity 
-                style={styles.primaryButton}
-                onPress={viewAppointmentDetails}
-              >
-                <Text style={styles.primaryButtonText}>Xem chi tiết</Text>
-                <Ionicons name="arrow-forward" size={16} color="#fff" />
-              </TouchableOpacity>
+                <TouchableOpacity 
+                  style={styles.primaryButton}
+                  onPress={viewAppointmentDetails}
+                >
+                  <Text style={styles.primaryButtonText}>
+                    Xem chi tiết
+                  </Text>
+                  <Ionicons 
+                    name="arrow-forward" 
+                    size={16} 
+                    color="#fff" 
+                    style={{marginLeft: 4}}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>
