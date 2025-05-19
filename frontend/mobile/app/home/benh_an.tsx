@@ -171,11 +171,35 @@ export default function MedicalRecordsScreen() {
   const onRefresh = () => {
     setRefreshing(true);
     loadMedicalRecords();
-  };
+  };  const formatDate = (dateString: string) => {
+    if (!dateString) return 'Chưa có ngày';
+    
+    try {
+      // Parse the ISO date string
+      const date = new Date(dateString);
+      
+      // Kiểm tra xem ngày có hợp lệ không
+      if (isNaN(date.getTime())) {
+        console.error('Ngày không hợp lệ:', dateString);
+        return 'Ngày không hợp lệ';
+      }
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('vi-VN');
+      // Format ngày giờ theo định dạng Việt Nam
+      const formatter = new Intl.DateTimeFormat('vi-VN', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+        timeZone: 'Asia/Ho_Chi_Minh'
+      });
+
+      return formatter.format(date);
+    } catch (error) {
+      console.error('Lỗi xử lý ngày:', error);
+      return 'Lỗi định dạng ngày';
+    }
   };
 
   const toggleSearchBar = () => {

@@ -293,13 +293,19 @@ export default function ThemBenhAnScreen() {
       let customerId = parseInt(selectedCustomer);
       if (user && currentCustomer) {
         customerId = currentCustomer.id;
-      }
-
-      // Create appointment
-      const appointmentData = {
+      }      // Create appointment
+      // Xử lý ngày giờ
+      const appointmentDate = new Date(date);
+      // Đặt giờ mặc định là 8:00 sáng
+      appointmentDate.setHours(8, 0, 0, 0);
+      // Format date as ISO string but keep local time
+      const isoDate = new Date(
+        appointmentDate.getTime() - (appointmentDate.getTimezoneOffset() * 60000)
+      ).toISOString();
+        const appointmentData = {
         pet_id: parseInt(petId),
         customer_id: customerId,
-        date: date.toISOString(),
+        date: isoDate,
         diagnosis: diagnosis,
         service: service,
         clinic: 'Phòng khám thú cưng PetCare',
@@ -787,7 +793,7 @@ export default function ThemBenhAnScreen() {
                   </View>
                 </View>
 
-                <View style={styles.detailRow}>
+                {/* <View style={styles.detailRow}>
                   <View style={styles.detailIconContainer}>
                     <Ionicons name="calendar" size={20} color="#4CAF50" />
                   </View>
@@ -797,7 +803,7 @@ export default function ThemBenhAnScreen() {
                       {new Date(createdAppointment.date).toLocaleDateString('vi-VN')}
                     </Text>
                   </View>
-                </View>
+                </View> */}
 
                 <View style={styles.detailRow}>
                   <View style={styles.detailIconContainer}>
