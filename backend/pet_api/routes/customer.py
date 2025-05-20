@@ -98,12 +98,52 @@ def update_customer(current_user_id, customer_id):
 @customer_bp.route('/<int:customer_id>', methods=['DELETE'])
 @token_required
 def delete_customer(current_user_id, customer_id):
-    customer = Customer.query.get_or_404(customer_id)
     try:
+        customer = Customer.query.get_or_404(customer_id)
+        
+        # Tìm và xóa tất cả appointments liên quan đến pets của customer
+        from models.appointment import Appointment
+        from sqlalchemy import or_
+        
+        # Lấy danh sách pet ids của customer
+        pet_ids = [pet.id for pet in customer.pets]
+        
+        if pet_ids:
+            # Tìm và xóa tất cả appointments liên quan
+            appointments = Appointment.query.filter(
+                or_(
+                    Appointment.customer_id == customer_id,
+                    Appointment.pet_id.in_(pet_ids)
+                )
+            ).all()
+            
+            for appointment in appointments:
+                db.session.delete(appointment)
+            logger.info(f"Deleted {len(appointments)} related appointments for customer {customer_id}")
+        
+        # Pets sẽ tự động bị xóa do có cascade='all, delete-orphan' trong model Customer
+        
+        # Xóa user tương ứng nếu có
+        if customer.email:
+            user = User.query.filter_by(email=customer.email).first()
+            if user and not user.is_admin():  # Không xóa tài khoản admin
+                db.session.delete(user)
+                logger.info(f"Deleted corresponding user account for customer {customer_id}")
+        
+        # Xóa customer
         db.session.delete(customer)
         db.session.commit()
-        logger.info(f"Customer {customer_id} deleted successfully")
-        return jsonify({'message': 'Xóa khách hàng thành công!'}), 200
+        
+        logger.info(f"Customer {customer_id} and all related records deleted successfully")
+        return jsonify({
+            'message': 'Xóa khách hàng và các dữ liệu liên quan thành công!',
+            'debug_info': {
+                'customer_id': customer_id,
+                'pet_count': len(pet_ids),
+                'appointment_count': len(appointments) if pet_ids else 0,
+            }
+        }), 200
+        
     except Exception as e:
         db.session.rollback()
         logger.error(f"Error deleting customer {customer_id}: {str(e)}")
