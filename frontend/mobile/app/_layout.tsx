@@ -13,7 +13,8 @@ export default function AppLayout() {
             title: 'Đăng nhập',
             headerStyle: { backgroundColor: '#1976D2' },
             headerTintColor: '#fff',
-            headerTitleStyle: { fontWeight: 'bold' }
+            headerTitleStyle: { fontWeight: 'bold' },
+            headerShown: false
           }} 
         />
         <Stack.Screen 
@@ -22,7 +23,8 @@ export default function AppLayout() {
             title: 'Đăng ký', 
             headerStyle: { backgroundColor: '#1976D2' },
             headerTintColor: '#fff',
-            headerTitleStyle: { fontWeight: 'bold' }
+            headerTitleStyle: { fontWeight: 'bold' },
+            headerShown: false
           }} 
         />
         <Stack.Screen 
@@ -31,7 +33,8 @@ export default function AppLayout() {
             title: 'Tài khoản', 
             headerStyle: { backgroundColor: '#1976D2' },
             headerTintColor: '#fff',
-            headerTitleStyle: { fontWeight: 'bold' }
+            headerTitleStyle: { fontWeight: 'bold' },
+            headerShown: false
           }} 
         />
         <Stack.Screen 
@@ -40,7 +43,8 @@ export default function AppLayout() {
             title: 'Cập nhật thông tin', 
             headerStyle: { backgroundColor: '#1976D2' },
             headerTintColor: '#fff',
-            headerTitleStyle: { fontWeight: 'bold' }
+            headerTitleStyle: { fontWeight: 'bold' },
+            headerShown: false
           }} 
         />
         <Stack.Screen 
@@ -49,7 +53,9 @@ export default function AppLayout() {
             title: 'Đổi mật khẩu', 
             headerStyle: { backgroundColor: '#1976D2' },
             headerTintColor: '#fff',
-            headerTitleStyle: { fontWeight: 'bold' }
+            headerTitleStyle: { fontWeight: 'bold' },
+            headerShown: false
+
           }} 
         />
         <Stack.Screen 
@@ -58,7 +64,8 @@ export default function AppLayout() {
             title: 'Liên hệ', 
             headerStyle: { backgroundColor: '#1976D2' },
             headerTintColor: '#fff',
-            headerTitleStyle: { fontWeight: 'bold' }
+            headerTitleStyle: { fontWeight: 'bold' },
+            headerShown: false
           }} 
         />
         <Stack.Screen 
@@ -67,16 +74,18 @@ export default function AppLayout() {
             title: 'Bệnh án', 
             headerStyle: { backgroundColor: '#1976D2' },
             headerTintColor: '#fff',
-            headerTitleStyle: { fontWeight: 'bold' }
+            headerTitleStyle: { fontWeight: 'bold' }, 
+            headerShown: false
+
           }} 
-        />
-        <Stack.Screen 
+        />        <Stack.Screen 
           name="home/them_benh_an" 
           options={{ 
             title: 'Thêm bệnh án mới', 
             headerStyle: { backgroundColor: '#1976D2' },
             headerTintColor: '#fff',
-            headerTitleStyle: { fontWeight: 'bold' }
+            headerTitleStyle: { fontWeight: 'bold' },
+            headerShown: false
           }} 
         />
         <Stack.Screen 
@@ -85,13 +94,23 @@ export default function AppLayout() {
             title: 'Bài viết', 
             headerStyle: { backgroundColor: '#1976D2' },
             headerTintColor: '#fff',
-            headerTitleStyle: { fontWeight: 'bold' }
+            headerTitleStyle: { fontWeight: 'bold' },
+            headerShown: false
           }} 
-        />
-        <Stack.Screen 
+        />        <Stack.Screen 
           name="bai-viet/[id]" 
           options={{ 
             title: 'Bài viết', 
+            headerStyle: { backgroundColor: '#1976D2' },
+            headerTintColor: '#fff',
+            headerTitleStyle: { fontWeight: 'bold' },
+            headerShown: false
+          }} 
+        />
+        <Stack.Screen 
+          name="home/benh_an/[id]" 
+          options={{ 
+            title: 'Chi tiết bệnh án',
             headerStyle: { backgroundColor: '#1976D2' },
             headerTintColor: '#fff',
             headerTitleStyle: { fontWeight: 'bold' },
