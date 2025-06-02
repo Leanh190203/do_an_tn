@@ -172,7 +172,7 @@ export default function UserProfileScreen() {
             
             <TouchableOpacity 
               style={styles.actionButton}
-              onPress={() => Alert.alert('Thông báo', 'Tính năng đang phát triển')}
+              onPress={() => router.push('/home/cai_dat_thong_bao')}
             >
               <MaterialCommunityIcons name="bell-outline" size={24} color="#1976D2" />
               <Text style={styles.actionButtonText}>Cài đặt thông báo</Text>
