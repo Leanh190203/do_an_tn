@@ -45,7 +45,7 @@ def init_database():
                 name='Admin',
                 phone='0909000111',
                 email='admin@example.com',
-                address='123 Đường ABC',
+                address='Thường Tín, Hà Nội`',
                 password=bcrypt.generate_password_hash('admin123').decode('utf-8'),
                 role='admin'
             )

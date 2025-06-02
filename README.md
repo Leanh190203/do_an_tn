@@ -1,72 +1,101 @@
-# Hướng dẫn khắc phục lỗi CORS
+# Phân tích Hệ thống Quản lý Bệnh Án Thú Cưng
 
-## Nguyên nhân lỗi CORS
+## Cấu trúc Hệ thống
 
-CORS (Cross-Origin Resource Sharing) là một cơ chế an ninh được trình duyệt áp dụng để ngăn chặn các yêu cầu từ một trang web đến một domain khác khi không có sự cho phép rõ ràng.
+Hệ thống được chia thành hai phần chính:
 
-Lỗi thường gặp: `Access to XMLHttpRequest at 'http://localhost:5000/api/...' from origin 'http://localhost:3000' has been blocked by CORS policy`
+### 1. Backend (Python Flask)
+- **Kiến trúc**: REST API
+- **Các module chính**:
+  - Quản lý người dùng (User Management)
+  - Quản lý khách hàng (Customer Management)
+  - Quản lý thú cưng (Pet Management)
+  - Quản lý lịch hẹn (Appointment Management)
+  - Quản lý bệnh án (Medical Records)
+  - Dashboard thống kê
+- **Tính năng đặc biệt**:
+  - Hệ thống xác thực (Authentication)
+  - Scheduler cho các tác vụ tự động
+  - Database migrations
 
-## Giải pháp mới (sau khi cập nhật)
+### 2. Frontend
+#### Mobile App (React Native với Expo)
+- **Tính năng chính**:
+  - Đăng nhập/Đăng ký
+  - Quản lý thông tin cá nhân
+  - Xem và quản lý thú cưng
+  - Đặt lịch khám
+  - Xem bệnh án
+  - Cập nhật thông tin
+  - Đổi mật khẩu
+- **UI/UX**:
+  - Hỗ trợ Dark/Light mode
+  - Giao diện thân thiện với người dùng
+  - Responsive design
 
-Chúng tôi đã thêm một proxy (http-proxy-middleware) để giải quyết vấn đề CORS. Hãy làm theo các bước sau:
+#### Web App (React.js)
+- Giao diện quản trị cho nhân viên y tế
+- Dashboard thống kê
 
-1. Cài đặt các dependencies mới:
-```bash
-cd frontend/web
-npm install
-```
+## Điểm mạnh
+1. **Kiến trúc phân tách**:
+   - Backend và Frontend tách biệt
+   - Dễ dàng mở rộng và bảo trì
+   
+2. **Công nghệ hiện đại**:
+   - Sử dụng React Native cho mobile
+   - Flask cho backend
+   - Hỗ trợ TypeScript
 
-2. Khởi động lại server theo thứ tự:
-```bash
-# Terminal 1 - Backend
-cd backend/pet_api
-python app.py
+3. **Tính năng đầy đủ**:
+   - Quản lý toàn diện thông tin thú cưng
+   - Hệ thống đặt lịch
+   - Quản lý bệnh án
 
-# Terminal 2 - Frontend 
-cd frontend/web
-npm start
-```
+## Hướng Phát triển
 
-3. Đảm bảo truy cập ứng dụng qua http://localhost:3000
+### 1. Tối ưu hóa hiệu suất
+- Thêm caching layer (Redis)
+- Tối ưu hóa queries database
+- Implement lazy loading cho images
 
-4. Nếu vẫn gặp lỗi, mở cửa sổ trình duyệt mới ở chế độ ẩn danh/Incognito và thử lại.
+### 2. Tính năng mới
+- **Thông báo thông minh**:
+  - Nhắc nhở lịch khám
+  - Thông báo về vaccine
+  - Push notifications
 
-## Các cách giải quyết khác
+- **AI/ML Integration**:
+  - Phân tích hình ảnh chẩn đoán
+  - Dự đoán bệnh dựa trên triệu chứng
+  - Gợi ý lịch tái khám
 
-### 1. Cài đặt extension CORS cho trình duyệt
+- **Tương tác xã hội**:
+  - Forum thảo luận
+  - Chia sẻ kinh nghiệm
+  - Đánh giá bác sĩ
 
-- Chrome: [CORS Unblock](https://chrome.google.com/webstore/detail/cors-unblock/lfhmikememgdcahcdlaciloancbhjino)
-- Firefox: [CORS Everywhere](https://addons.mozilla.org/en-US/firefox/addon/cors-everywhere/)
+### 3. Bảo mật và Tuân thủ
+- Implement 2FA
+- Mã hóa dữ liệu nhạy cảm
+- Audit logging
+- GDPR compliance
 
-### 2. Khởi động lại và xóa cache
+### 4. Mở rộng nền tảng
+- **API Gateway**:
+  - Rate limiting
+  - API versioning
+  - Documentation tự động
 
-1. Dừng cả frontend và backend
-2. Xóa cache trình duyệt (Ctrl+Shift+Delete)
-3. Khởi động lại backend
-4. Khởi động lại frontend
-5. Sử dụng cửa sổ Incognito/Private để kiểm tra
+- **Microservices**:
+  - Tách các service độc lập
+  - Container hóa với Docker
+  - Kubernetes để quản lý
 
-### 3. Kiểm tra port 5000
+### 5. Tích hợp
+- Tích hợp thanh toán trực tuyến
+- Kết nối với các phòng lab
+- Tích hợp với các thiết bị IoT theo dõi sức khỏe thú cưng
 
-Đảm bảo cổng 5000 không bị chiếm bởi ứng dụng khác:
-
-Windows:
-```
-netstat -ano | findstr 5000
-```
-
-### 4. Kiểm tra URL API trong code frontend
-
-Đảm bảo tất cả các service đều sử dụng instance api từ api.js và không có URL hardcoded nào.
-
-## Hướng dẫn debug CORS
-
-1. Mở Chrome DevTools (F12)
-2. Vào tab Network
-3. Lọc "XHR" hoặc "Fetch" để xem các API requests
-4. Tìm các request bị đánh dấu đỏ
-5. Kiểm tra trong tab Headers, Response, Preview để xem lỗi cụ thể
-
-## Liên hệ hỗ trợ
-
-Nếu vẫn gặp vấn đề, vui lòng liên hệ đội hỗ trợ. 
+## Kết luận
+Hệ thống hiện tại đã có nền tảng tốt với kiến trúc rõ ràng và công nghệ hiện đại. Việc tập trung vào các hướng phát triển đề xuất sẽ giúp nâng cao chất lượng dịch vụ và trải nghiệm người dùng, đồng thời tạo ra một hệ sinh thái hoàn chỉnh cho việc chăm sóc thú cưng.

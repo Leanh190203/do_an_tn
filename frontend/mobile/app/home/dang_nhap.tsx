@@ -39,7 +39,7 @@ export default function LoginScreen() {
       await login(email, password);
       router.push('/');
     } catch (error) {
-      console.error('Lỗi đăng nhập:', error);
+      // Đã có Alert trong AuthContext, không cần log lỗi ra console nữa
     } finally {
       setLoading(false);
     }
