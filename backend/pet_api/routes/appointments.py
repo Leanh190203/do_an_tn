@@ -7,6 +7,7 @@ from auth import token_required
 import logging
 from datetime import datetime, timedelta
 from sqlalchemy import or_, and_, func
+from models.user import User
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -17,25 +18,30 @@ appointment_bp = Blueprint('appointment', __name__, url_prefix='/api/appointment
 @token_required
 def get_appointments(current_user_id):
     try:
-        # Check for query parameters
+        user = User.query.get(current_user_id)
+        if not user:
+            return jsonify({'message': 'Không tìm thấy user'}), 404
+
+        # Nếu là admin, lấy tất cả lịch hẹn
+        if user.role == 'admin':
+            query = Appointment.query
+        else:
+            # Lấy customer có email trùng với user
+            customer = Customer.query.filter_by(email=user.email).first()
+            if not customer:
+                return jsonify([]), 200
+            query = Appointment.query.filter(Appointment.customer_id == customer.id)
+
+        # Các filter khác giữ nguyên
         status = request.args.get('status')
         pet_id = request.args.get('pet_id')
-        customer_id = request.args.get('customer_id')
         search = request.args.get('search')
         limit = request.args.get('limit', type=int)
-        
-        # Start with base query
-        query = Appointment.query
-        
-        # Apply filters
+
         if status:
             query = query.filter(Appointment.status == status)
         if pet_id:
             query = query.filter(Appointment.pet_id == pet_id)
-        if customer_id:
-            query = query.filter(Appointment.customer_id == customer_id)
-        
-        # Apply search if provided
         if search:
             search_term = f"%{search}%"
             query = query.join(Pet).join(Customer).filter(
@@ -45,14 +51,9 @@ def get_appointments(current_user_id):
                     Appointment.service.ilike(search_term)
                 )
             )
-        
-        # Apply limit if specified
         if limit:
             query = query.limit(limit)
-            
-        # Order by appointment date descending (newest first)
         query = query.order_by(Appointment.appointment_date.desc())
-        
         appointments = query.all()
         return jsonify([appointment.to_dict() for appointment in appointments]), 200
     except Exception as e:
