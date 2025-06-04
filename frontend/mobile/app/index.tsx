@@ -354,7 +354,7 @@ export default function HomeScreen() {
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Tin tức</Text>
             <TouchableOpacity onPress={() => navigateTo('articles')}>
-              <Text style={styles.seeAllText}>Xem tất cả</Text>
+             
             </TouchableOpacity>
           </View>
           <View style={styles.newsContainer}>
